@@ -1,0 +1,5 @@
+{
+  "name": "ClearFlow X - NDR Platform",
+  "description": "A world-class Network Detection and Response (NDR) security dashboard featuring real-time traffic monitoring, threat hunting, and automated alert investigations.",
+  "requestFramePermissions": []
+}
