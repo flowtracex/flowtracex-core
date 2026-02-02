@@ -65,7 +65,7 @@ const PlatformHealthPage: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-6 max-w-[1300px] mx-auto animate-in fade-in duration-500 pb-20">
       {/* TAB NAVIGATION */}
       <div className="flex items-center gap-8 border-b border-[#1e1e20] -mt-2 mb-6">
         {tabs.map(tab => (
