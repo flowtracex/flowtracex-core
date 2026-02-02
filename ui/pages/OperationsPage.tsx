@@ -1,9 +1,5 @@
-
 import React from 'react';
-import { 
-  Monitor, Wifi, Plug, Zap, Globe2, Activity, Shield, 
-  Lock, Sparkles, Terminal, Database, ArrowRight
-} from 'lucide-react';
+import { Monitor, Wifi, Plug, Zap, Globe2, Activity, Shield, Lock, Sparkles, Terminal, Database, ArrowRight } from 'lucide-react';
 
 interface Props {
   currentView: string;
@@ -12,75 +8,92 @@ interface Props {
 const OperationsPage: React.FC<Props> = ({ currentView }) => {
   const getModuleTitle = () => {
     switch (currentView) {
-      case 'operations-data-sources': return 'Data Source Ingestion';
-      case 'operations-integrations': return 'Global Integrations';
-      case 'operations-threat-intel': return 'Threat Intelligence Feeds';
-      case 'operations-automation': return 'Playbooks & SOAR';
-      default: return 'Operations Engine';
+      case 'operations-data-sources':
+        return 'Data sources';
+      case 'operations-integrations':
+        return 'Integrations';
+      case 'operations-threat-intel':
+        return 'Threat intelligence';
+      case 'operations-automation':
+        return 'Automation';
+      default:
+        return 'Operations';
     }
   };
 
   const getModuleIcon = () => {
     switch (currentView) {
-      case 'operations-data-sources': return Wifi;
-      case 'operations-integrations': return Plug;
-      case 'operations-threat-intel': return Globe2;
-      case 'operations-automation': return Zap;
-      default: return Activity;
+      case 'operations-data-sources':
+        return Wifi;
+      case 'operations-integrations':
+        return Plug;
+      case 'operations-threat-intel':
+        return Globe2;
+      case 'operations-automation':
+        return Zap;
+      default:
+        return Activity;
     }
   };
 
   const Icon = getModuleIcon();
 
   return (
-    <div className="h-[calc(100vh-200px)] flex flex-col items-center justify-center animate-in fade-in duration-700">
-      <div className="relative mb-12">
-        <div className="absolute -inset-10 bg-[#00D4AA] opacity-5 blur-[80px] rounded-full animate-pulse" />
-        <div className="bg-[#161618] border border-[#1e1e20] p-10 rounded-[40px] shadow-2xl relative z-10 group hover:border-[#00D4AA33] transition-all">
-          <Icon size={64} className="text-[#00D4AA] group-hover:scale-110 transition-transform" />
-        </div>
-        <div className="absolute -top-2 -right-2 bg-[#00D4AA] text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg rotate-12">
-          PHASE 2
-        </div>
-      </div>
-
-      <div className="text-center max-w-2xl space-y-6">
-        <div className="space-y-2">
-          <h2 className="text-xl font-black text-white tracking-tighter uppercase">
+    <div className="min-h-screen  flex items-center justify-center p-3">
+      <div className="max-w-4xl w-full">
+        {/* Header Section */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-3 mb-8">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+              <Icon className="w-12 h-12 text-blue-400" />
+            </div>
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-extralight text-white mb-6 tracking-tight">
             {getModuleTitle()}
-          </h2>
-          <p className="text-[#00D4AA] text-[11px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-2">
-            <Sparkles size={14} /> updatesoon <Sparkles size={14} />
-          </p>
+          </h1>
+          
+          <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 mb-8">
+            <span className="text-sm text-amber-400">in development</span>
+          </div>
         </div>
 
-        <p className="text-gray-500 text-sm leading-relaxed font-medium uppercase tracking-tight">
-          The {getModuleTitle()} workspace is currently being optimized for global enterprise scale. 
-          This high-availability module will feature real-time status monitoring and automated failover orchestration.
-        </p>
+        {/* Description Card */}
+        <div className="mb-12">
+          <div className="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 backdrop-blur-sm">
+            <p className="text-lg text-slate-300 leading-relaxed text-center">
+               This module is currently being optimized for enterprise scale. 
+  It will feature real-time monitoring, automated orchestration, 
+  and high-availability infrastructure.
+            </p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-10">
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-4 gap-4 mb-12">
           {[
-            { label: 'E2E Encryption', icon: Lock },
-            { label: 'Cloud Sync', icon: Database },
-            { label: 'Live Telemetry', icon: Activity },
-            { label: 'Auto Scale', icon: Shield }
+            { label: 'encrypted', icon: Lock, color: 'emerald' },
+            { label: 'cloud sync', icon: Database, color: 'blue' },
+            { label: 'live monitoring', icon: Activity, color: 'purple' },
+            { label: 'auto-scale', icon: Shield, color: 'cyan' }
           ].map((feat, i) => (
-            <div key={i} className="bg-[#161618] border border-[#1e1e20] p-4 rounded-lg flex flex-col items-center gap-3 group hover:bg-[#00D4AA05] transition-all">
-              <feat.icon size={20} className="text-gray-600 group-hover:text-[#00D4AA] transition-colors" />
-              <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest group-hover:text-gray-300 transition-colors">{feat.label}</span>
+            <div
+              key={i}
+              className="group p-6 rounded-xl bg-slate-900/30 border border-slate-800 hover:border-slate-700 transition-all duration-300"
+            >
+              <feat.icon className={`w-6 h-6 text-${feat.color}-400 mb-3`} />
+              <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                {feat.label}
+              </span>
             </div>
           ))}
         </div>
 
-        <div className="pt-12 flex flex-col items-center gap-4">
-           <button className="bg-[#1e1e20] border border-[#333] px-10 py-3.5 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-3 hover:text-white transition-all group shadow-xl">
-             <Terminal size={14} className="group-hover:text-[#00D4AA]" /> Join Deployment Waitlist
-           </button>
-           <p className="text-[9px] text-gray-700 font-bold uppercase tracking-widest">
-             Expected delivery: Q4 2024 • Build core-x-9842
-           </p>
-        </div>
+        {/* Timeline */}
+        {/* <div className="flex items-center justify-center gap-3 text-slate-500">
+          <Terminal className="w-4 h-4" />
+          <span className="text-sm">expected delivery: q4 2024</span>
+        </div> */}
       </div>
     </div>
   );

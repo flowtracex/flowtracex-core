@@ -159,61 +159,68 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
           
           {/* Why This Alert Was Triggered */}
           <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+  {/* Header */}
   <div className="border-b border-[#1e1e20] px-6 py-4">
     <div className="flex items-center gap-2">
       <AlertTriangle size={16} className="text-amber-400" />
-      <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Why This Alert Was Triggered</h3>
+      <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+        Why This Alert Was Triggered
+      </h3>
     </div>
   </div>
-  
+
+  {/* Body */}
   <div className="p-6">
     <div className="grid grid-cols-1 gap-4">
-      {/* Summary text */}
-      <p className="text-sm text-zinc-400 leading-relaxed mb-2">
-        This alert was triggered based on multiple behavioral anomalies detected in network traffic patterns. The following observations contributed to the overall confidence score.
+      {/* Summary */}
+      <p className="text-sm text-zinc-400 leading-relaxed">
+        This alert was triggered because the system detected
+        <span className="text-zinc-200 font-medium">
+          {" "}sustained abnormal outbound data transfer behavior
+        </span>
+        , which deviated significantly from the host’s historical baseline.
       </p>
-      
-      {/* Column headers */}
-      <div className="grid grid-cols-3 gap-3 text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">
-        <div>Observation</div>
-        <div>Details</div>
-        <div className="text-right">Confidence Contributor</div>
-      </div>
-      
-      {/* Outbound Volume Spike */}
-      <button 
-        onClick={() => openSidebar('signal-outbound')}
-        className="grid grid-cols-3 gap-4 bg-zinc-900/30 border border-[#1e1e20] rounded-lg p-4 hover:border-cyan-600/40 transition-all text-left"
-      >
-        <div>
-          <div className="text-sm font-bold text-white">Outbound Volume Spike</div>
-        </div>
-        <div>
-          <div className="text-xs text-zinc-400">The host sent significantly more data than it normally does.</div>
-        </div>
-        <div className="flex items-center justify-end gap-3">
-          <span className="text-sm font-black text-red-400 min-w-[3rem]">70%</span>
-        </div>
-      </button>
 
-      {/* Upload/Download Ratio Shift */}
-      <button 
-        onClick={() => openSidebar('signal-ratio')}
-        className="grid grid-cols-3 gap-4 bg-zinc-900/30 border border-[#1e1e20] rounded-lg p-4 hover:border-cyan-600/40 transition-all text-left"
-      >
-        <div>
-          <div className="text-sm font-bold text-white">Upload / Download Ratio Shift</div>
-        </div>
-        <div>
-          <div className="text-xs text-zinc-400">The host uploaded much more data than it downloaded, which is unusual.</div>
-        </div>
-        <div className="flex items-center justify-end gap-3">
-          <span className="text-sm font-black text-amber-400 min-w-[3rem]">85%</span>
-        </div>
-      </button>
+      {/* Detection stages */}
+      <div>
+        <h4 className="text-md font-semibold text-zinc-300  tracking-wide mb-2">
+          Detection Stages
+        </h4>
+        <ul className="list-disc list-inside text-sm text-zinc-400 space-y-1">
+          <li>
+            <span className="text-zinc-200 font-medium">Anomaly detected:</span>{" "}
+            Initial abnormal outbound activity was identified compared to normal behavior.
+          </li>
+          <li>
+            <span className="text-zinc-200 font-medium">Behavior sustained:</span>{" "}
+            The abnormal behavior persisted across multiple observation intervals.
+          </li>
+          <li>
+            <span className="text-zinc-200 font-medium">Alert threshold exceeded:</span>{" "}
+            Combined signal confidence crossed the alert threshold, resulting in alert generation.
+          </li>
+        </ul>
+      </div>
+
+      {/* Key factors */}
+      <div>
+        <h4 className="text-md font-semibold text-zinc-300  tracking-wide mb-2">
+          Key Contributing Factors
+        </h4>
+        <ul className="list-disc list-inside text-sm text-zinc-400 space-y-1">
+          <li>Sustained outbound volume spike</li>
+          <li>Abnormal upload-to-download ratio</li>
+        </ul>
+      </div>
+
+      {/* Footer note */}
+      <p className="text-xs text-zinc-500 italic">
+        The activity was observed consistently over a defined time window and was not a single transient spike.
+      </p>
     </div>
   </div>
 </div>
+
 
           {/* Attack Progression */}
           {/* <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
@@ -272,8 +279,8 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
             <div className="p-6">
             <div className="space-y-0">
   {/* Timeline Item 1 */}
-  <div className="flex gap-3">
-    <div className="flex flex-col items-center">
+  <div onClick={() => openSidebar('signal-outbound')} className="flex gap-3 cursor-pointer">
+    <div  className="flex flex-col items-center">
       <div className="w-8 h-8 rounded-full bg-cyan-500 border-2 border-[#0f0f10] flex items-center justify-center text-xs font-black text-black z-10">
         1
       </div>
@@ -299,7 +306,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
   </div>
 
   {/* Timeline Item 2 */}
-  <div className="flex gap-3">
+  <div onClick={() => openSidebar('signal-ratio')} className="flex gap-3 cursor-pointer">
     <div className="flex flex-col items-center">
       <div className="w-8 h-8 rounded-full bg-cyan-500 border-2 border-[#0f0f10] flex items-center justify-center text-xs font-black text-black z-10">
         2
