@@ -732,25 +732,25 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                 <Info size={14} className="text-[#00D4AA]"/> Log Context
               </h4>
               <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-3">
-                <div>
-                  <p className="text-[8px] font-black text-zinc-700 uppercase">Timestamp (UTC)</p>
-                  <p className="text-xs font-mono text-white">{selectedLog.timestamp}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] font-black text-zinc-700 uppercase">Internal Log ID</p>
-                  <p className="text-xs font-mono text-zinc-500">{selectedLog.id}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] font-black text-zinc-700 uppercase">Global Severity</p>
-                  <p className={`text-xs font-black uppercase ${selectedLog.severity === 'critical' ? 'text-red-500' : 'text-zinc-400'}`}>
-                    {selectedLog.severity}
-                  </p>
-                </div>
-              </div>
+  <div className="flex items-center justify-between">
+    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Timestamp (UTC)</p>
+    <p className="text-sm font-mono text-white">{selectedLog.timestamp}</p>
+  </div>
+  <div className="flex items-center justify-between">
+    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Internal Log ID</p>
+    <p className="text-sm font-mono text-zinc-400">{selectedLog.id}</p>
+  </div>
+  <div className="flex items-center justify-between">
+    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Global Severity</p>
+    <p className={`text-sm font-black uppercase ${selectedLog.severity === 'critical' ? 'text-red-500' : 'text-zinc-400'}`}>
+      {selectedLog.severity}
+    </p>
+  </div>
+</div>
             </div>
 
             {/* NETWORK INTELLIGENCE */}
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                 <Database size={14} className="text-blue-400"/> Network Intelligence
               </h4>
@@ -772,10 +772,10 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* BEHAVIORAL PATTERN */}
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                 <Activity size={14} className="text-[#00D4AA]"/> Behavioral Pattern
               </h4>
@@ -805,10 +805,10 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* ACTIONABLE INTELLIGENCE */}
-            <div className="space-y-4 bg-zinc-950/50 p-4 rounded-lg border border-zinc-800/50">
+            {/* <div className="space-y-4 bg-zinc-950/50 p-4 rounded-lg border border-zinc-800/50">
               <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                 <Brain size={14} className="text-purple-400"/> Actionable Intelligence
               </h4>
@@ -830,10 +830,10 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                   <Download size={14}/>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* RELATED LOGS */}
-            <div className="space-y-4 pt-6 border-t border-zinc-800">
+            {/* <div className="space-y-4 pt-6 border-t border-zinc-800">
               <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                 <Layers size={14} /> Related Logs
               </h4>
@@ -848,7 +848,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                   View all correlated logs
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

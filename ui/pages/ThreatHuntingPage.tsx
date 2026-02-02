@@ -1636,14 +1636,345 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
   };
 
   const renderHuntResults = () => {
-    if (!selectedHunt) return null;
+  if (!selectedHunt) return null;
 
-    return (
-      <div className="animate-in slide-in-from-right-4 duration-500 space-y-8">
-        {/* Results view content goes here */}
+  return (
+    <div className="animate-in fade-in duration-500 space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={() => setView('findings')} 
+          className="p-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all"
+        >
+          <ArrowLeft size={20}/>
+        </button>
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-2xl font-black text-white">{selectedHunt.name}</h1>
+            <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold uppercase rounded">
+              ZEEK ANALYZED
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-sm text-zinc-500">
+            <span className="font-mono">HUNT ID: {selectedHunt.id}</span>
+            <span>•</span>
+            <span>Executed 2 hours ago</span>
+            <span>•</span>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Network.Live</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm font-bold text-zinc-300 hover:bg-zinc-800 transition-all">
+            Last 24 Hours
+          </button>
+          <button className="px-4 py-2 bg-emerald-500 text-black rounded-lg text-sm font-bold hover:bg-emerald-400 transition-all">
+            Actions
+          </button>
+        </div>
       </div>
-    );
-  };
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Hunt Definition */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText size={16} className="text-emerald-400" />
+              <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest">Hunt Definition</h3>
+            </div>
+            <p className="text-sm text-zinc-300 leading-relaxed mb-6">
+              {selectedHunt.hypothesis}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Signal 1: DNS Activity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-blue-400 uppercase tracking-widest">Signal 1: DNS Activity</span>
+                  <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold uppercase rounded">
+                    Active
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Field:</span>
+                    <span className="text-xs font-mono text-zinc-300">query</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Match:</span>
+                    <span className="text-xs font-mono text-pink-400">*.top</span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-zinc-800">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase block mb-1">Threshold:</span>
+                    <span className="text-xs text-zinc-300">More than 50 events within 5 minutes</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Signal 2: HTTP Activity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-red-400 uppercase tracking-widest">Signal 2: HTTP Activity</span>
+                  <span className="px-2 py-1 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-bold uppercase rounded">
+                    Active
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Field:</span>
+                    <span className="text-xs font-mono text-zinc-300">method</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Value:</span>
+                    <span className="text-xs font-mono text-pink-400">POST</span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-zinc-800">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase block mb-1">Threshold:</span>
+                    <span className="text-xs text-zinc-300">More than 10 events within 10 minutes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Correlation Info */}
+            <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center gap-2">
+              <Link size={14} className="text-emerald-400" />
+              <span className="text-xs text-zinc-500 font-bold">Signals correlated by</span>
+              <span className="text-xs font-mono text-emerald-400">Source Host</span>
+              <div className="ml-auto flex items-center gap-2 text-xs text-zinc-600">
+                <span>Global Window:</span>
+                <span className="font-bold text-zinc-400">5 Minutes</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Signals Observed */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Signals Observed</h3>
+            
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-4 px-4 py-2 text-[10px] font-bold text-zinc-600 uppercase tracking-wider">
+                <div>Signal Name</div>
+                <div>Matches</div>
+                <div>Execution Window</div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg items-center">
+                <div className="text-sm font-bold text-white">DNS Activity</div>
+                <div className="text-sm font-bold text-blue-400">5 matches</div>
+                <div className="text-xs font-mono text-zinc-500">13:48 - 13:55</div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg items-center">
+                <div className="text-sm font-bold text-white">HTTP Activity</div>
+                <div className="text-sm font-bold text-red-400">2 matches</div>
+                <div className="text-xs font-mono text-zinc-500">13:48 - 14:00</div>
+              </div>
+            </div>
+          </section>
+
+          {/* Observed Activity Timeline */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-6">Observed Activity Timeline</h3>
+            
+            <div className="space-y-4 relative pl-8">
+              {/* Timeline line */}
+              <div className="absolute left-[11px] top-3 bottom-3 w-0.5 bg-zinc-800" />
+
+              {/* Timeline Event 1 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:48 DNS Signal Matched</span>
+                    <span className="text-xs font-mono text-zinc-500">13:48</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Initial high-entropy query threshold reached from <span className="font-mono text-blue-400">192.168.1.45</span>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 2 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:46 DNS Signal Repeated</span>
+                    <span className="text-xs font-mono text-zinc-500">13:46</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Subsequent queries to domain <span className="font-mono text-blue-400">update.srv-log</span> identified.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 3 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-orange-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:48 HTTP Signal Matched</span>
+                    <span className="text-xs font-mono text-zinc-500">13:48</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Outbound POST request detected, initiating correlation sequence.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 4 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-emerald-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-emerald-400">14:98 Correlation Window Completed</span>
+                    <span className="text-xs font-mono text-zinc-500">14:98</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Final execution facts summarized. Correlation confirmed across <span className="font-bold text-emerald-400">7 specific</span> matches.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Right Column - Sidebar */}
+        <div className="space-y-6">
+          {/* Entities Involved */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Entities Involved</h3>
+            
+            <div className="space-y-3">
+              {/* Primary Entity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Monitor size={14} className="text-zinc-400" />
+                  <span className="text-lg font-black font-mono text-white">192.168.1.45</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-zinc-600 uppercase font-bold">Source System: WS-FRAN</span>
+                </div>
+                <div className="mt-2 pt-2 border-t border-zinc-800">
+                  <span className="px-2 py-1 bg-red-500/10 border border-red-500/30 text-red-400 text-[9px] font-bold uppercase rounded">
+                    Critical Asset
+                  </span>
+                </div>
+              </div>
+
+              {/* Secondary Entity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <User size={14} className="text-zinc-400" />
+                  <span className="text-sm font-bold text-white">FVLAN</span>
+                </div>
+                <div className="text-[10px] text-zinc-600 uppercase font-bold">
+                  Network System Involved
+                </div>
+              </div>
+
+              {/* Destinations */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Globe size={14} className="text-zinc-400" />
+                  <span className="text-sm font-bold text-white">3 Destinations</span>
+                </div>
+                <div className="text-[10px] text-zinc-600 uppercase font-bold">
+                  Countries Entities Contacted
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Hunt Results Summary */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-6">Hunt Results Summary</h3>
+            
+            <div className="space-y-6">
+              {/* Correlated Matches */}
+              <div className="text-center">
+                <div className="text-5xl font-black text-emerald-400 mb-2">{selectedHunt.matchesFound}</div>
+                <div className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Correlated Matches</div>
+              </div>
+
+              {/* Total Activity */}
+              <div className="text-center pt-6 border-t border-zinc-800">
+                <div className="text-4xl font-black text-white mb-2">32m</div>
+                <div className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Total Activity Span</div>
+              </div>
+
+              {/* Signals Satisfied */}
+              <div className="pt-6 border-t border-zinc-800">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-zinc-400 uppercase">Signals Satisfied</span>
+                  <span className="text-sm font-black text-emerald-400">2 of 2</span>
+                </div>
+                <div className="w-full h-2 bg-zinc-950 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500" style={{ width: '100%' }} />
+                </div>
+                <p className="text-[10px] text-zinc-600 mt-2">
+                  All configured scoring criteria were associated output.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Next Actions */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Next Actions</h3>
+            
+            <div className="space-y-2">
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Create investigation case</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Review affected entities</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Re-run hunt with adjustments</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* Footer Stats */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+        <div className="flex items-center justify-between text-xs text-zinc-500">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Database size={14} className="text-emerald-400" />
+              <span className="font-bold uppercase">Total Data: 2.6 GB</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock size={14} className="text-blue-400" />
+              <span className="font-bold uppercase">12:1</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield size={14} className="text-purple-400" />
+              <span className="font-bold uppercase">45 MB/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
   return (
     <div className="min-h-screen text-white">

@@ -83,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
       expanded: detectionsExpanded,
       setExpanded: setDetectionsExpanded,
       subItems: [
-        { id: 'detections-feed', label: 'Detection Feed', icon: List },
+        { id: 'detections-feed', label: 'Detection Feed ', icon: List },
         { id: 'detections-analytics', label: 'Analytics', icon: BarChart2 }
       ]
     },

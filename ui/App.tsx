@@ -10,6 +10,7 @@ import TopThreatsPanel from './components/dashboard/TopThreatsPanel';
 
 import DashboardPage from './pages/DashboardPage';
 import DetectionsPage from './pages/DetectionsPage';
+import AlertPage from './pages/AlertPage';
 import AssetsPage from './pages/AssetsPage';
 import ThreatHuntingPage from './pages/ThreatHuntingPage';
 import NetworkViewPage from './pages/NetworkViewPage';
@@ -73,6 +74,9 @@ const App: React.FC = () => {
         return <DetectionsPage key="detections-feed" defaultView="feed" />;
       case 'detections-analytics': 
         return <DetectionsPage key="detections-analytics" defaultView="stats" />;
+
+        case 'alert-feed':
+    return <AlertPage />;
       
       // Investigations
       case 'investigations': 

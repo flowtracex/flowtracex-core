@@ -267,7 +267,7 @@ const AssetDetailPage: React.FC<Props> = ({ ip, onBack }) => {
             <div className="px-6 py-4 border-b border-zinc-800 bg-[#0d0d0f] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Server size={14} className="text-blue-400" />
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-blue-400">Active Services</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-blue-400">Observed Listening Services</h3>
               </div>
               <button className="text-[9px] font-bold text-blue-400 uppercase tracking-wider hover:text-blue-300 transition-colors">
                 See Config Log
@@ -277,9 +277,9 @@ const AssetDetailPage: React.FC<Props> = ({ ip, onBack }) => {
             <div className="p-6">
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { name: 'LDAP', status: 'Listening', change: '+8.2%' },
-                  { name: 'DNS', status: 'Listening', change: '-2%' },
-                  { name: 'HTTP', status: 'Listening', change: '+3%' },
+                  { name: 'SMB', status: 'Listening', change: '+8.2%' },
+                  { name: 'LDAP', status: 'Listening', change: '-2%' },
+                  { name: 'DNS', status: 'Listening', change: '+3%' },
                 ].map((service, i) => (
                   <div key={i} className="bg-[#0d0d0f] border border-zinc-800 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
@@ -302,7 +302,7 @@ const AssetDetailPage: React.FC<Props> = ({ ip, onBack }) => {
         <div className="bg-[#0a0a0b] border border-emerald-500/30 rounded-xl p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">Asset Risk Score</h3>
+              <h3 className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">Current Network Status</h3>
               <div className="flex items-baseline gap-3">
                 <span className="text-5xl font-black text-emerald-400">12</span>
                 <span className="text-sm font-black text-emerald-500 uppercase">Nominal</span>
