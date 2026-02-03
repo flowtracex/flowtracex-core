@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -133,7 +132,8 @@ func (c *Consumer) Start(ctx context.Context) {
 				return
 			default:
 				// Channel full - this should not happen with proper buffering
-				log.Printf("WARNING: output channel full, dropping message")
+				// Send error to centralized error handler
+				c.errors <- fmt.Errorf("output channel full, dropping message")
 			}
 		}
 	}

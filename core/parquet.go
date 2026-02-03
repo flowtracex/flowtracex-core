@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -44,6 +43,15 @@ type ParquetWriter struct {
 	fileCounter     int
 	basePath        string
 	normalizer      *Normalizer    // Reference to normalizer for static fields (needs to be exported or we pass rules)
+	flushCount      int64          // Total flush count (for health monitoring)
+	totalEvents     int64          // Total events processed (for health monitoring)
+}
+
+// GetMetrics returns current buffer metrics (thread-safe)
+func (pw *ParquetWriter) GetMetrics() (bufferBytes, bufferLimit int64, flushCount, totalEvents int64) {
+	pw.mu.Lock()
+	defer pw.mu.Unlock()
+	return pw.bufferSize, pw.bufferLimit, pw.flushCount, pw.totalEvents
 }
 
 // NewParquetWriter creates a new Parquet writer for a log_type
@@ -119,6 +127,7 @@ func (pw *ParquetWriter) Start(ctx context.Context) error {
 			// Approximate size: assume ~1KB per event (conservative estimate)
 			pw.bufferSize += 1024
 			pw.eventCount++
+			pw.totalEvents++
 
 			// Check flush conditions (OR logic - any one can trigger)
 			shouldFlush := false
@@ -158,14 +167,19 @@ func (pw *ParquetWriter) flushBuffer(ctx context.Context, blocking bool) {
 	// Swap buffer: create new buffer, keep old one for flushing
 	oldBuffer := pw.buffer
 	oldEventCount := pw.eventCount
+	oldBufferSize := pw.bufferSize
 	pw.buffer = make([]interface{}, 0, 1000)
 	pw.bufferSize = 0
 	pw.eventCount = 0
 	pw.lastFlushTime = time.Now()
+	pw.flushCount++
 	pw.mu.Unlock()
 	
-	// Log flush reason for debugging (if multiple conditions met, log all)
-	_ = oldEventCount // Use event count for potential future logging
+	// Log buffer flush (state change only)
+	logger := GetLogger()
+	bufferMB := float64(oldBufferSize) / (1024 * 1024)
+	logger.Info("buffer", fmt.Sprintf("flush log_type=%s reason=threshold", pw.logType),
+		fmt.Sprintf("bytes=%.1fMB events=%d", bufferMB, oldEventCount))
 
 	// Flush old buffer
 	if blocking {
@@ -200,7 +214,9 @@ func (pw *ParquetWriter) writeParquetFile(ctx context.Context, events []interfac
 	)
 
 	if err := os.MkdirAll(hourPath, 0755); err != nil {
-		log.Printf("ERROR [%s]: failed to create hour directory: %v", pw.logType, err)
+		logger := GetLogger()
+		logger.Error("parquet", fmt.Sprintf("create directory failed log_type=%s", pw.logType),
+			fmt.Sprintf("path=%s error=%v", hourPath, err))
 		return
 	}
 
@@ -218,7 +234,9 @@ func (pw *ParquetWriter) writeParquetFile(ctx context.Context, events []interfac
 	// Create Parquet file
 	file, err := os.Create(filename)
 	if err != nil {
-		log.Printf("ERROR [%s]: failed to create file: %v", pw.logType, err)
+		logger := GetLogger()
+		logger.Error("parquet", fmt.Sprintf("create file failed log_type=%s", pw.logType),
+			fmt.Sprintf("path=%s error=%v", filename, err))
 		return
 	}
 	defer file.Close()
@@ -226,7 +244,9 @@ func (pw *ParquetWriter) writeParquetFile(ctx context.Context, events []interfac
 	// Get schema and create writer based on log_type using reflection
 	parquetSchema, err := pw.getSchemaForLogType()
 	if err != nil {
-		log.Printf("ERROR [%s]: failed to get schema: %v", pw.logType, err)
+		logger := GetLogger()
+		logger.Error("parquet", fmt.Sprintf("get schema failed log_type=%s", pw.logType),
+			fmt.Sprintf("error=%v", err))
 		return
 	}
 
@@ -243,17 +263,19 @@ func (pw *ParquetWriter) writeParquetFile(ctx context.Context, events []interfac
 
 	// Write all rows in a single batch (efficient)
 	if _, err := pwWriter.WriteRows(rows); err != nil {
-		log.Printf("ERROR [%s]: failed to write rows: %v", pw.logType, err)
+		logger := GetLogger()
+		logger.Error("parquet", fmt.Sprintf("write rows failed log_type=%s", pw.logType),
+			fmt.Sprintf("file=%s error=%v", filename, err))
 		return
 	}
 
 	// Close writer (flushes data)
 	if err := pwWriter.Close(); err != nil {
-		log.Printf("ERROR [%s]: failed to close writer: %v", pw.logType, err)
+		logger := GetLogger()
+		logger.Error("parquet", fmt.Sprintf("close writer failed log_type=%s", pw.logType),
+			fmt.Sprintf("file=%s error=%v", filename, err))
 		return
 	}
-
-	log.Printf("INFO [%s]: flushed %d events to %s", pw.logType, len(events), filename)
 }
 
 // getSchemaForLogType returns the Parquet schema for the log type using reflection
@@ -329,7 +351,8 @@ func (pw *ParquetWriter) convertEvent(event *EnrichedEvent) interface{} {
 	// Get the struct type for this log type
 	structType := pw.getStructTypeForLogType()
 	if structType == nil {
-		log.Printf("WARNING: unknown log_type: %s", pw.logType)
+		logger := GetLogger()
+		logger.Warn("parquet", fmt.Sprintf("unknown log_type log_type=%s", pw.logType), "")
 		return nil
 	}
 	
