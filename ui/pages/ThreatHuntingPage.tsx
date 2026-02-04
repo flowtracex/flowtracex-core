@@ -607,14 +607,14 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
   };
 
   const Breadcrumbs = ({ current }: { current: string }) => (
-    <div className="flex items-center gap-2 text-xs text-zinc-500 font-medium mb-8">
+    <div className="flex items-center gap-2 text-xs text-zinc-500 font-medium ">
       <span className="cursor-pointer hover:text-emerald-400 transition-colors" onClick={() => setView('history')}>
-        RECIPES
+        THREAT HUNTING 
       </span>
       {current !== 'RECIPES' && (
         <>
           <span>/</span>
-          <span className="text-emerald-400 uppercase">{current}</span>
+          <span className="text-emerald-400 uppercase">{current} </span>
         </>
       )}
     </div>
@@ -634,25 +634,40 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
   const renderHuntBuilder = () => {
     return (
       <div className="animate-in fade-in duration-500 space-y-8">
-        <Breadcrumbs current="Hunt Builder" />
+        <Breadcrumbs current="New Hunt" />
 
         {/* Field Picker Modal */}
         <FieldPickerModal />
 
         {/* DATA SOURCES SECTION */}
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 shadow-xl space-y-3">
-          <h3 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+          <h3 className="text-[12px] font-black text-white uppercase tracking-widest flex items-center gap-2">
             <Database size={14} className="text-[#00D4AA]" />
-            Data Source Overview
+            Hunt Context
           </h3>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            Telemetry from endpoint, DNS, and network logs is analyzed to detect abnormal
-            communication and potential data exfiltration activity.
+            Define and execute a threat hunt by correlating suspicious network behaviors across time and protocols.
           </p>
-          <div className="flex items-center gap-2 text-[10px] text-emerald-400 font-semibold uppercase tracking-widest">
+          <h5 className="text-[13px] font-black text-white  tracking-widest ">Data used in this hunt:</h5>
+          <ul className="list-disc list-inside text-sm text-zinc-400 space-y-1">
+          <li>DNS, HTTP, and network flow telemetry (Zeek)</li>
+          
+        </ul>
+         
+          <p className="text-xs text-zinc-400 leading-relaxed">
+           <span className="text-600">Coverage:</span>  28.4 million events
+          </p>
+          <h5 className="text-[13px] font-black text-white  tracking-widest ">Why this works:</h5>
+          <ul className="list-disc list-inside text-sm text-zinc-400 space-y-1">
+          <li>Explains intent, not implementation</li>
+          <li>Honest about data source</li>
+          <li>Reads like a mission briefing</li>
+          
+        </ul>
+          {/* <div className="flex items-center gap-2 text-[10px] text-emerald-400 font-semibold uppercase tracking-widest">
             <ShieldCheck size={12} />
             Coverage: 28.4M events
-          </div>
+          </div> */}
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -667,11 +682,14 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                       <Zap size={24} className="text-blue-500" />
                     </div>
                     <div>
-                      <h2 className="text-base font-bold text-zinc-100">Stage 01: Initial Trigger</h2>
-                      <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern (DNS.LOG)</p>
+                      <h2 className="text-base font-bold text-zinc-100">Step 1: Identify Initial Suspicious Behavior </h2>
+                      <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Select a pattern that represents the first sign of suspicious activity.</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
+                    <button className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-lg text-[9px] font-black text-blue-400 uppercase tracking-widest">
+                      Trigger_Source
+                    </button>
                     <select 
                       value={logicGroups[0]?.source || 'dns.log'}
                       onChange={e => setLogicGroups(logicGroups.map((g, i) => i === 0 ? {...g, source: e.target.value} : g))}
@@ -681,9 +699,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                       <option value="http.log">http.log</option>
                       <option value="flow.log">flow.log</option>
                     </select>
-                    <button className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-lg text-[9px] font-black text-blue-400 uppercase tracking-widest">
-                      Trigger_Source
-                    </button>
+                    
                   </div>
                 </div>
 
@@ -693,44 +709,57 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                     {logicGroups[0]?.conditions.map((cond) => (
                       <div key={cond.id} className="flex items-center gap-3">
                         <div className="relative flex-1">
-                          <input 
-                            type="text" 
-                            value={cond.field} 
-                            onChange={e => updateCondition(logicGroups[0].id, cond.id, { field: e.target.value })} 
-                            placeholder="id.orig_h"
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-mono text-zinc-300 outline-none focus:border-blue-500" 
-                          />
-                          <button
-                            onClick={() => openFieldModal(logicGroups[0].id, cond.id, 'field')}
-                            className="absolute right-2 top-2 w-7 h-7 flex items-center justify-center rounded-md bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
-                          >
-                            <ChevronDown size={14} />
-                          </button>
-                        </div>
-                        <select 
-                          value={cond.operator} 
-                          onChange={e => updateCondition(logicGroups[0].id, cond.id, { operator: e.target.value })} 
-                          className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-[10px] font-bold uppercase text-blue-400 outline-none"
-                        >
-                          <option value="EQUAL">EQUAL</option>
-                          <option value="!=">NOT EQUAL</option>
-                          <option value="IN">IN</option>
-                        </select>
-                        <div className="relative flex-1">
-                          <input 
-                            type="text" 
-                            value={cond.value} 
-                            onChange={e => updateCondition(logicGroups[0].id, cond.id, { value: e.target.value })} 
-                            placeholder="value..."
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-medium text-zinc-300 outline-none focus:border-blue-500" 
-                          />
-                          <button
-                            onClick={() => openFieldModal(logicGroups[0].id, cond.id, 'value')}
-                            className="absolute right-2 top-2 w-7 h-7 flex items-center justify-center rounded-md bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
-                          >
-                            <ChevronDown size={14} />
-                          </button>
-                        </div>
+  <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    field
+  </label>
+  <input 
+    type="text" 
+    value={cond.field} 
+    onChange={e => updateCondition(logicGroups[0].id, cond.id, { field: e.target.value })} 
+    placeholder="id.orig_h"
+    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-mono text-zinc-300 outline-none focus:border-blue-500" 
+  />
+  <button
+    onClick={() => openFieldModal(logicGroups[0].id, cond.id, 'field')}
+    className="absolute right-2 bottom-2 w-7 h-7 flex items-center justify-center rounded-md bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
+  >
+    <ChevronDown size={14} />
+  </button>
+</div>
+
+<div className="relative">
+  <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    operator
+  </label>
+  <select 
+    value={cond.operator} 
+    onChange={e => updateCondition(logicGroups[0].id, cond.id, { operator: e.target.value })} 
+    className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-[10px] font-bold uppercase text-blue-400 outline-none"
+  >
+    <option value="EQUAL">EQUAL</option>
+    <option value="!=">NOT EQUAL</option>
+    <option value="IN">IN</option>
+  </select>
+</div>
+
+<div className="relative flex-1">
+  <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    value
+  </label>
+  <input 
+    type="text" 
+    value={cond.value} 
+    onChange={e => updateCondition(logicGroups[0].id, cond.id, { value: e.target.value })} 
+    placeholder="value..."
+    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-medium text-zinc-300 outline-none focus:border-blue-500" 
+  />
+  <button
+    onClick={() => openFieldModal(logicGroups[0].id, cond.id, 'value')}
+    className="absolute right-2 bottom-2 w-7 h-7 flex items-center justify-center rounded-md bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
+  >
+    <ChevronDown size={14} />
+  </button>
+</div>
                         <button 
                           onClick={() => removeCondition(logicGroups[0].id, cond.id)} 
                           className="w-9 h-9 flex items-center justify-center text-zinc-700 hover:text-red-500 transition-colors"
@@ -752,7 +781,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                     <div className="flex items-center gap-2 mb-3">
                       <Activity size={13} className="text-blue-400" />
                       <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
-                        Time-Bucket Logic
+                        How often should this behavior occur?
                       </span>
                       <span className="text-[9px] text-zinc-600 uppercase">
                         Agg: COUNT(*)
@@ -762,7 +791,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                          Occ
+                          Occurs more than 
                         </span>
                         <span className="text-xs text-zinc-500">&gt;</span>
                         <input
@@ -775,7 +804,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
 
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                          Window
+                          times within 
                         </span>
                         <input
                           type="number"
@@ -805,7 +834,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
     {/* Left Section - Join Identifier */}
     <div className="flex items-center gap-3 flex-1">
       <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-        Join Identifier
+        Track the same entity across signals
       </span>
       
       <div className="flex items-center gap-2 bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
@@ -904,8 +933,8 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                           <Sparkles size={24} className="text-red-500" />
                         </div>
                         <div>
-                          <h2 className="text-base font-bold text-zinc-100">Stage 02: Correlated Anomaly</h2>
-                          <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern (HTTP.LOG)</p>
+                          <h2 className="text-base font-bold text-zinc-100">Step 2: Correlate with Additional Suspicious Behavior</h2>
+                          <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Confirm the initial finding by linking it with related activity.</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -937,8 +966,12 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                       <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-4">
                         {logicGroups[1]?.conditions.map((cond) => (
                           <div key={cond.id} className="flex items-center gap-3">
-                            <div className="relative flex-1">
-                              <input 
+                            <div className=" flex-1">
+                              <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    Field
+  </label>
+  <div className="flex-1 relative">
+    <input 
                                 type="text" 
                                 value={cond.field} 
                                 onChange={e => updateCondition(logicGroups[1].id, cond.id, { field: e.target.value })} 
@@ -951,18 +984,32 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                               >
                                 <ChevronDown size={14} />
                               </button>
+
+  </div>
+                              
                             </div>
-                            <select 
+                            <div className=" flex-1 relative">
+                              <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    Operator
+  </label>
+                              <select 
                               value={cond.operator} 
                               onChange={e => updateCondition(logicGroups[1].id, cond.id, { operator: e.target.value })} 
-                              className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-[10px] font-bold uppercase text-red-400 outline-none"
+                              className="bg-zinc-900 w-full border border-zinc-800 rounded-lg px-4 py-3 text-[10px] font-bold uppercase text-red-400 outline-none"
                             >
                               <option value="EQUAL">EQUAL</option>
                               <option value="!=">NOT EQUAL</option>
                               <option value="IN">IN</option>
                             </select>
+
+                            </div>
+                            
                             <div className="relative flex-1">
-                              <input 
+                              <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
+    Value
+  </label>
+  <div className="relative flex-1">
+    <input 
                                 type="text" 
                                 value={cond.value} 
                                 onChange={e => updateCondition(logicGroups[1].id, cond.id, { value: e.target.value })} 
@@ -975,6 +1022,9 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                               >
                                 <ChevronDown size={14} />
                               </button>
+
+  </div>
+                              
                             </div>
                             <button 
                               onClick={() => removeCondition(logicGroups[1].id, cond.id)} 
@@ -996,7 +1046,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                         <div className="flex items-center gap-2 mb-3">
                           <Activity size={12} className="text-red-400" />
                           <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
-                            Time-Bucket Logic
+                            How often should this correlated behavior occur?
                           </span>
                           <span className="text-[9px] text-zinc-600 uppercase">
                             COUNT(*)
@@ -1054,14 +1104,14 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
           <div className="space-y-8">
             {/* HUNT IDENTITY SECTION */}
             <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 shadow-xl space-y-6">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest">Hunt Identity</h3>
+              <h3 className="text-xs font-black text-white uppercase tracking-widest">Hunt Definition</h3>
               <div className="space-y-5">
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest pl-1">Hunt Name</label>
                   <input type="text" value={huntName} onChange={(e) => setHuntName(e.target.value)} placeholder="e.g. C2 Beaconing Sweep" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-5 py-3 text-xs text-white outline-none focus:ring-1 focus:ring-[#00D4AA]" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest pl-1">Time Horizon</label>
+                  <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest pl-1">Search time range</label>
                   <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-5 py-3 text-xs text-white outline-none appearance-none cursor-pointer focus:ring-1 focus:ring-[#00D4AA]">
                     <option>Last 1 hour</option>
                     <option>Last 6 hours</option>
@@ -1071,14 +1121,14 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest pl-1">Hypothesis</label>
-                  <textarea value={hypothesis} onChange={(e) => setHypothesis(e.target.value)} placeholder="Describe what you are looking for..." className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-5 py-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#00D4AA] min-h-[120px] resize-none" />
+                  <textarea value={hypothesis} onChange={(e) => setHypothesis(e.target.value)} placeholder="What suspicious behavior are you trying to confirm or disprove?" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-5 py-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#00D4AA] min-h-[120px] resize-none" />
                 </div>
               </div>
               <button 
                 onClick={() => setView('results')}
                 className="w-full bg-[#00D4AA] text-black py-5 rounded-lg text-[11px] font-black uppercase tracking-[0.3em] hover:bg-emerald-400 shadow-2xl shadow-emerald-500/10 transition-all flex items-center justify-center gap-3"
               >
-                <Play size={18} fill="currentColor" /> Execute Hunt
+                <Play size={18} fill="currentColor" /> Run Hunt
               </button>
               <div className="flex justify-center items-center gap-3 text-[9px] text-zinc-600 font-bold uppercase">
                 <span>Ctrl + Enter to run</span>
@@ -1099,15 +1149,15 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-xl font-bold text-white mb-2">Investigation Recipes</h1>
-          <p className="text-sm text-zinc-500">Reusable threat-hunting templates managed by the SOC team.</p>
+          <h1 className="text-xl font-bold text-white mb-2">Threat Hunts</h1>
+          <p className="text-sm text-zinc-500">Saved and reusable threat hunts created by the SOC team</p>
         </div>
         <button 
           onClick={() => setView('builder')}
           className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-3 rounded-lg text-sm font-bold transition-all flex items-center gap-2"
         >
           <Plus size={18} />
-          Build New Hunt
+         New Hunt
         </button>
       </div>
 
@@ -1137,7 +1187,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
       <div className="bg-zinc-900 border border-zinc-800 rounded-t-lg">
         <div className="grid grid-cols-12 gap-4 px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-800">
           <div className="col-span-3">Hunt Name</div>
-          <div className="col-span-1">Stages</div>
+          <div className="col-span-1">Steps</div>
           <div className="col-span-2">Category</div>
           <div className="col-span-2">Author</div>
           <div className="col-span-2">Last Run</div>
@@ -1146,9 +1196,9 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
 
         {/* Recipe Rows */}
         {MOCK_HUNTS.map(hunt => (
-          <div key={hunt.id} className="grid grid-cols-12 gap-4 px-6 py-5 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
+          <div key={hunt.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
             <div className="col-span-3">
-              <h3 className="text-base font-bold text-white mb-1">{hunt.name}</h3>
+              <h3 className="text-sm font-bold text-white mb-1">{hunt.name}</h3>
             </div>
             <div className="col-span-1 flex items-center gap-2">
               {hunt.stages.map(stage => (
@@ -1225,7 +1275,8 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
           <div className="flex items-start justify-between mb-8">
             <div>
               <h1 className="text-2xl font-black text-white mb-2">{selectedHunt.name}</h1>
-              <p className="text-sm text-zinc-400">Recipe ID: {selectedHunt.id}</p>
+              {/* <p className="text-sm text-zinc-400">Recipe ID: {selectedHunt.id}</p> */}
+              <p className="text-sm text-zinc-400">Saved Threat Hunt</p>
             </div>
             <div className="flex gap-3">
               <button 
@@ -1233,136 +1284,161 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                 className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-3 rounded-lg text-sm font-bold transition-all flex items-center gap-2"
               >
                 <Play size={18} />
-                Execute Now 
+                Run Hunt 
               </button>
               <button className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-6 py-3 rounded-lg text-sm font-bold hover:bg-zinc-700 transition-all">
-                Edit Recipe
+                Edit Hunt 
               </button>
             </div>
           </div>
 
           {/* CORRELATION FLOW SECTION - UPDATED TO MATCH SCREENSHOT */}
-          <section className="bg-zinc-950 border border-zinc-800 rounded-lg p-8 mb-8">
-            <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-8">Correlation Flow</h3>
+         <section className="bg-zinc-950 border border-zinc-800 rounded-xl p-8 mb-8">
+  {/* Header */}
+  <div className="mb-10">
+    <h3 className="text-sm font-bold text-white uppercase tracking-wide mb-2">How this hunt works</h3>
+    <p className="text-xs text-zinc-500">
+      This hunt looks for an initial suspicious pattern and confirms it by correlating related activity.
+    </p>
+  </div>
+  
+  {/* Stages Grid */}
+  <div className="relative">
+    {/* Connection Line */}
+    <div className="absolute top-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent hidden lg:block" />
+    
+    <div className="grid lg:grid-cols-2 gap-8 lg:gap-40 relative">
+      {/* Stage 1 - DNS.LOG */}
+      <div className="relative">
+        <div className="bg-gradient-to-b from-zinc-900/50 to-black/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm">
+          {/* Step Badge */}
+          <div className="inline-flex items-center gap-2 mb-5">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+              <span className="text-emerald-400 font-black text-sm">1</span>
+            </div>
+            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Initial Signal</span>
+          </div>
+          
+          {/* Title */}
+          <h4 className="text-base font-bold text-white mb-6 uppercase tracking-tight">
+            Suspicious DNS activity
+          </h4>
+
+          {/* Condition */}
+          <div className="mb-4 p-4 bg-black/40 border border-zinc-800/60 rounded-lg">
+            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+              Condition:
+            </div>
+            <div className="font-mono text-xs text-zinc-300">
+              <span className="text-emerald-400">DNS queries</span>
+              <span className="text-zinc-500 mx-2">matching</span>
+              <span className="text-pink-400">"*.top"</span>
+            </div>
+          </div>
+
+          {/* Threshold */}
+          <div className="p-4 bg-black/40 border border-zinc-800/60 rounded-lg">
+            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+              Observed when:
+            </div>
+            <div className="text-xs text-white font-mono">
+              <span className="font-bold">More than 50 </span> 
+              <span className="text-zinc-500 mx-1">queries within </span>
+              <span className="font-bold">5 minutes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Correlation Indicator - Center */}
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 z-10 bg-zinc-950 border-2 border-emerald-500/50 rounded-lg px-6 py-2.5 shadow-lg shadow-emerald-500/10 hidden lg:block">
+        <div className="text-center">
+          <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+            Within 5m
+          </div>
+        </div>
+      </div>
+
+      {/* Stage 2 - HTTP.LOG */}
+      {selectedHunt.stages.length > 1 && (
+        <div className="relative">
+          <div className="bg-gradient-to-b from-zinc-900/50 to-black/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm">
+            {/* Step Badge */}
+            <div className="inline-flex items-center gap-2 mb-5">
+              <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+                <span className="text-emerald-400 font-black text-sm">2</span>
+              </div>
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Correlated Signal</span>
+            </div>
             
-            <div className="grid grid-cols-2 gap-24 relative">
-              {/* Stage 1 - DNS.LOG */}
-              <div className="bg-black border border-zinc-800 rounded-xl p-5 relative">
-                <div className="absolute -top-3 left-4 px-3 py-1 bg-black border border-zinc-800 rounded-md">
-                  <span className="text-[9px] font-black text-zinc-600 uppercase tracking-wider">Stage 01</span>
-                </div>
-                
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-                    <span className="text-emerald-400 font-black text-sm">1</span>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white uppercase tracking-tight">DNS.LOG</h4>
-                  </div>
-                </div>
+            {/* Title */}
+            <h4 className="text-base font-bold text-white mb-6 uppercase tracking-tight">
+              Suspicious outbound HTTP behavior
+            </h4>
 
-                <div className="space-y-0">
-                  <div className="py-3 border-b border-zinc-800/50">
-                    <div className="mb-2">
-                      <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-wider">Condition:</span>
-                    </div>
-                    <div className="font-mono text-xs text-zinc-300">
-                      <span className="text-emerald-400">query</span>
-                      <span className="text-zinc-500 mx-2">MATCHES</span>
-                      <span className="text-pink-400">"*.top"</span>
-                    </div>
-                  </div>
-
-                  <div className="py-3">
-                    <div className="mb-2">
-                      <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-wider">Threshold:</span>
-                    </div>
-                    <div className="text-xs text-white font-mono">
-                      <span className="font-bold">50</span> 
-                      <span className="text-zinc-500 mx-1">events in</span>
-                      <span className="font-bold">5m</span>
-                    </div>
-                  </div>
-                </div>
+            {/* Condition */}
+            <div className="mb-4 p-4 bg-black/40 border border-zinc-800/60 rounded-lg">
+              <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                Condition:
               </div>
-
-              {/* Correlation Key - Center */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-black border border-emerald-500/50 rounded-lg px-5 py-2.5 shadow-2xl">
-                <div className="text-center">
-                  <div className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">
-                    Within 5m
-                  </div>
-                </div>
-              </div>
-
-              {/* Stage 2 - HTTP.LOG */}
-              {selectedHunt.stages.length > 1 && (
-                <div className="bg-black border border-zinc-800 rounded-xl p-5 relative">
-                  <div className="absolute -top-3 left-4 px-3 py-1 bg-black border border-zinc-800 rounded-md">
-                    <span className="text-[9px] font-black text-zinc-600 uppercase tracking-wider">Stage 02</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-                      <span className="text-emerald-400 font-black text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white uppercase tracking-tight">HTTP.LOG</h4>
-                    </div>
-                  </div>
-
-                  <div className="space-y-0">
-                    <div className="py-3 border-b border-zinc-800/50">
-                      <div className="mb-2">
-                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-wider">Condition:</span>
-                      </div>
-                      <div className="font-mono text-xs text-zinc-300">
-                        <span className="text-emerald-400">method</span>
-                        <span className="text-zinc-500 mx-2">EQUAL</span>
-                        <span className="text-pink-400">"POST"</span>
-                      </div>
-                    </div>
-
-                    <div className="py-3">
-                      <div className="mb-2">
-                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-wider">Threshold:</span>
-                      </div>
-                      <div className="text-xs text-white font-mono">
-                        <span className="font-bold">10</span> 
-                        <span className="text-zinc-500 mx-1">events in</span>
-                        <span className="font-bold">10m</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Correlation Key at bottom */}
-            <div className="mt-8 pt-6 border-t border-zinc-800">
-              <div className="flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">
-                    Correlation Key
-                  </div>
-                  <div className="text-sm font-mono text-emerald-400 font-bold">
-                    ID.ORIG_H
-                  </div>
-                </div>
+              <div className="font-mono text-xs text-zinc-300">
+                <span className="text-emerald-400">HTTP POST </span>
+                <span className="text-zinc-500 mx-2">requests</span>
+                <span className="text-pink-400">observed</span>
               </div>
             </div>
-          </section>
+
+            {/* Threshold */}
+            <div className="p-4 bg-black/40 border border-zinc-800/60 rounded-lg">
+              <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                Threshold:
+              </div>
+              <div className="text-xs text-white font-mono">
+                <span className="font-bold">More than </span> 
+                <span className="text-zinc-500 mx-1">10 requests </span>
+                <span className="font-bold">within 10 minutes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* Mobile Correlation Indicator */}
+    <div className="flex lg:hidden justify-center my-6">
+      <div className="bg-zinc-950 border-2 border-emerald-500/50 rounded-lg px-6 py-2.5 shadow-lg">
+        <div className="text-center">
+          <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+            Within 5m
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Footer - Correlation Info */}
+  <div className="mt-10 pt-6 border-t border-zinc-800">
+    <div className="text-center">
+      <div className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+        How activities are linked
+      </div>
+      <div className="text-xs text-zinc-600">
+        This hunt correlates DNS and HTTP activity originating from the same source host.
+      </div>
+    </div>
+  </div>
+</section>
 
           {/* EXECUTION HISTORY */}
           <section className="bg-zinc-950 border border-zinc-800 rounded-lg p-6">
-            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-4">Execution History</h3>
+            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-4">Hunt Runs</h3>
             
             <div className="space-y-2">
               <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-bold text-zinc-600 uppercase">
                 <div className="col-span-3">Run Time</div>
-                <div className="col-span-3">Horizon</div>
+                <div className="col-span-3">Time range</div>
                 <div className="col-span-2">Status</div>
-                <div className="col-span-2">Matches</div>
+                <div className="col-span-2">Results</div>
                 <div className="col-span-2 text-right">Action</div>
               </div>
               
@@ -1389,7 +1465,7 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                     onClick={() => setView('findings')}
                     className="text-emerald-400 text-xs font-bold uppercase hover:text-emerald-300 transition-colors flex items-center gap-2 ml-auto"
                   >
-                    View Results <ArrowRight size={14} />
+                    View Matches <ArrowRight size={14} />
                   </button>
                 </div>
               </div>
@@ -1413,35 +1489,35 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
             <ArrowLeft size={20}/>
           </button>
           <div>
-            <Breadcrumbs current="Execution Findings" />
+            <Breadcrumbs current="Hunt Results" />
           </div>
         </div>
 
         <div>
-          <h1 className="text-3xl font-black text-white mb-2">Execution Findings</h1>
-          <div className="flex items-center gap-6 text-sm text-zinc-500">
-            <span className="font-bold">{selectedHunt.matchesFound} CORRELATION MATCHES</span>
+          <h1 className="text-2xl font-black text-white mb-2">Hunt Results</h1>
+          <div className="flex items-center gap-6 text-[12px] text-zinc-500">
+            <span className="font-bold">{selectedHunt.matchesFound} correlated findings </span>
             <span>•</span>
-            <span>SCANNED {selectedHunt.dataProcessed} GB</span>
+            <span>Scanned {selectedHunt.dataProcessed} GB</span>
             <span>•</span>
-            <span>TIME: {selectedHunt.duration}s</span>
+            <span>Completed in  {selectedHunt.duration}s</span>
           </div>
         </div>
 
         {/* Correlation Key Set Cards */}
         <div className="space-y-4">
           {/* First Entity - 10.0.8.115 */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 hover:border-zinc-700 transition-all">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-8 hover:border-zinc-700 transition-all">
             <div className="flex items-center justify-between">
               <div className="space-y-4">
-                <div className="flex items-start gap-8">
+                <div className="flex items-center gap-8">
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Correlation Key Set</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Affected Entity</p>
                     <div className="flex items-center gap-3">
-                      <span className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                      {/* <span className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                         Entity Cluster
-                      </span>
-                      <span className="text-2xl font-black font-mono text-white tracking-tight">10.0.8.115</span>
+                      </span> */}
+                      <span className="text-lg font-black font-mono text-white tracking-tight">Host: 10.0.8.115</span>
                     </div>
                     <p className="text-xs text-zinc-600 mt-2 font-mono">UID: 9F3C2A77...</p>
                   </div>
@@ -1449,12 +1525,12 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Matched Stages</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Signals Observed</p>
                     <div className="flex items-center gap-2">
-                      <span className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-black flex items-center justify-center">
+                      <span className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-black flex items-center justify-center">
                         01
                       </span>
-                      <span className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-black flex items-center justify-center">
+                      <span className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-black flex items-center justify-center">
                         02
                       </span>
                     </div>
@@ -1463,21 +1539,21 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Time Window</p>
-                    <div className="space-y-1">
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Observed Activity Window</p>
+                    <div className=" flex items-center gap-2">
                       <p className="text-xs font-mono text-zinc-400">
                         <span className="text-emerald-400 font-black">08:02</span> → <span className="text-red-400 font-black">08:34</span>
                       </p>
-                      <p className="text-[10px] text-zinc-600 uppercase font-black">Duration: 32 min</p>
+                      <p className="text-[10px] pt-1 text-zinc-600 uppercase font-black">(32 minutes)</p>
                     </div>
                   </div>
 
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Result Strength</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Finding Confidence</p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-black text-red-500">HIGH</span>
+                      <span className="text-lg font-black text-red-500">HIGH</span>
                     </div>
                   </div>
                 </div>
@@ -1485,25 +1561,25 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
 
               <button 
                 onClick={() => setView('results')}
-                className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all"
+                className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-wider transition-all"
               >
-                View Story
+                View Finding
               </button>
             </div>
           </div>
 
           {/* Second Entity - 10.0.12.88 */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 hover:border-zinc-700 transition-all">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-8 hover:border-zinc-700 transition-all">
             <div className="flex items-center justify-between">
               <div className="space-y-4">
-                <div className="flex items-start gap-8">
+                <div className="flex items-center gap-8">
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Correlation Key Set</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Affected Entity</p>
                     <div className="flex items-center gap-3">
-                      <span className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                      {/* <span className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                         Entity Cluster
-                      </span>
-                      <span className="text-2xl font-black font-mono text-white tracking-tight">10.0.12.88</span>
+                      </span> */}
+                      <span className="text-lg font-black font-mono text-white tracking-tight">Host: 10.0.8.115</span>
                     </div>
                     <p className="text-xs text-zinc-600 mt-2 font-mono">UID: 7A4B9E12...</p>
                   </div>
@@ -1511,12 +1587,12 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Matched Stages</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Signals Observed</p>
                     <div className="flex items-center gap-2">
-                      <span className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-black flex items-center justify-center">
+                      <span className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-black flex items-center justify-center">
                         01
                       </span>
-                      <span className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-black flex items-center justify-center">
+                      <span className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-black flex items-center justify-center">
                         02
                       </span>
                     </div>
@@ -1525,21 +1601,22 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Time Window</p>
-                    <div className="space-y-1">
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Observed Activity Window</p>
+                    <div className="flex items-center gap-2">
                       <p className="text-xs font-mono text-zinc-400">
                         <span className="text-emerald-400 font-black">09:15</span> → <span className="text-red-400 font-black">09:42</span>
                       </p>
-                      <p className="text-[10px] text-zinc-600 uppercase font-black">Duration: 27 min</p>
+                      <p className="text-[10px] pt-1 text-zinc-600 uppercase font-black">(27 minutes)</p>
+                     
                     </div>
                   </div>
 
                   <div className="h-16 w-px bg-zinc-800" />
 
                   <div>
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Result Strength</p>
+                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Finding Confidence</p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-black text-yellow-500">MEDIUM</span>
+                      <span className="text-lg font-black text-yellow-500">MEDIUM</span>
                     </div>
                   </div>
                 </div>
@@ -1547,9 +1624,9 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
 
               <button 
                 onClick={() => setView('results')}
-                className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all"
+                className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-wider transition-all"
               >
-                View Story
+                View Finding
               </button>
             </div>
           </div>
@@ -1559,14 +1636,345 @@ const ThreatHuntingPage: React.FC<{ defaultView?: 'builder' | 'history' | 'detai
   };
 
   const renderHuntResults = () => {
-    if (!selectedHunt) return null;
+  if (!selectedHunt) return null;
 
-    return (
-      <div className="animate-in slide-in-from-right-4 duration-500 space-y-8">
-        {/* Results view content goes here */}
+  return (
+    <div className="animate-in fade-in duration-500 space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={() => setView('findings')} 
+          className="p-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all"
+        >
+          <ArrowLeft size={20}/>
+        </button>
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-2xl font-black text-white">{selectedHunt.name}</h1>
+            <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold uppercase rounded">
+              ZEEK ANALYZED
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-sm text-zinc-500">
+            <span className="font-mono">HUNT ID: {selectedHunt.id}</span>
+            <span>•</span>
+            <span>Executed 2 hours ago</span>
+            <span>•</span>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Network.Live</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm font-bold text-zinc-300 hover:bg-zinc-800 transition-all">
+            Last 24 Hours
+          </button>
+          <button className="px-4 py-2 bg-emerald-500 text-black rounded-lg text-sm font-bold hover:bg-emerald-400 transition-all">
+            Actions
+          </button>
+        </div>
       </div>
-    );
-  };
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Hunt Definition */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText size={16} className="text-emerald-400" />
+              <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest">Hunt Definition</h3>
+            </div>
+            <p className="text-sm text-zinc-300 leading-relaxed mb-6">
+              {selectedHunt.hypothesis}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Signal 1: DNS Activity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-blue-400 uppercase tracking-widest">Signal 1: DNS Activity</span>
+                  <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold uppercase rounded">
+                    Active
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Field:</span>
+                    <span className="text-xs font-mono text-zinc-300">query</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Match:</span>
+                    <span className="text-xs font-mono text-pink-400">*.top</span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-zinc-800">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase block mb-1">Threshold:</span>
+                    <span className="text-xs text-zinc-300">More than 50 events within 5 minutes</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Signal 2: HTTP Activity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-red-400 uppercase tracking-widest">Signal 2: HTTP Activity</span>
+                  <span className="px-2 py-1 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-bold uppercase rounded">
+                    Active
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Field:</span>
+                    <span className="text-xs font-mono text-zinc-300">method</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase">Value:</span>
+                    <span className="text-xs font-mono text-pink-400">POST</span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-zinc-800">
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase block mb-1">Threshold:</span>
+                    <span className="text-xs text-zinc-300">More than 10 events within 10 minutes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Correlation Info */}
+            <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center gap-2">
+              <Link size={14} className="text-emerald-400" />
+              <span className="text-xs text-zinc-500 font-bold">Signals correlated by</span>
+              <span className="text-xs font-mono text-emerald-400">Source Host</span>
+              <div className="ml-auto flex items-center gap-2 text-xs text-zinc-600">
+                <span>Global Window:</span>
+                <span className="font-bold text-zinc-400">5 Minutes</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Signals Observed */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Signals Observed</h3>
+            
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-4 px-4 py-2 text-[10px] font-bold text-zinc-600 uppercase tracking-wider">
+                <div>Signal Name</div>
+                <div>Matches</div>
+                <div>Execution Window</div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg items-center">
+                <div className="text-sm font-bold text-white">DNS Activity</div>
+                <div className="text-sm font-bold text-blue-400">5 matches</div>
+                <div className="text-xs font-mono text-zinc-500">13:48 - 13:55</div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg items-center">
+                <div className="text-sm font-bold text-white">HTTP Activity</div>
+                <div className="text-sm font-bold text-red-400">2 matches</div>
+                <div className="text-xs font-mono text-zinc-500">13:48 - 14:00</div>
+              </div>
+            </div>
+          </section>
+
+          {/* Observed Activity Timeline */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-6">Observed Activity Timeline</h3>
+            
+            <div className="space-y-4 relative pl-8">
+              {/* Timeline line */}
+              <div className="absolute left-[11px] top-3 bottom-3 w-0.5 bg-zinc-800" />
+
+              {/* Timeline Event 1 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:48 DNS Signal Matched</span>
+                    <span className="text-xs font-mono text-zinc-500">13:48</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Initial high-entropy query threshold reached from <span className="font-mono text-blue-400">192.168.1.45</span>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 2 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:46 DNS Signal Repeated</span>
+                    <span className="text-xs font-mono text-zinc-500">13:46</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Subsequent queries to domain <span className="font-mono text-blue-400">update.srv-log</span> identified.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 3 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-orange-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">13:48 HTTP Signal Matched</span>
+                    <span className="text-xs font-mono text-zinc-500">13:48</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Outbound POST request detected, initiating correlation sequence.
+                  </p>
+                </div>
+              </div>
+
+              {/* Timeline Event 4 */}
+              <div className="relative">
+                <div className="absolute left-[-30px] top-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-zinc-900 z-10" />
+                <div className="bg-zinc-950 border border-emerald-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-emerald-400">14:98 Correlation Window Completed</span>
+                    <span className="text-xs font-mono text-zinc-500">14:98</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">
+                    Final execution facts summarized. Correlation confirmed across <span className="font-bold text-emerald-400">7 specific</span> matches.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Right Column - Sidebar */}
+        <div className="space-y-6">
+          {/* Entities Involved */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Entities Involved</h3>
+            
+            <div className="space-y-3">
+              {/* Primary Entity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Monitor size={14} className="text-zinc-400" />
+                  <span className="text-lg font-black font-mono text-white">192.168.1.45</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-zinc-600 uppercase font-bold">Source System: WS-FRAN</span>
+                </div>
+                <div className="mt-2 pt-2 border-t border-zinc-800">
+                  <span className="px-2 py-1 bg-red-500/10 border border-red-500/30 text-red-400 text-[9px] font-bold uppercase rounded">
+                    Critical Asset
+                  </span>
+                </div>
+              </div>
+
+              {/* Secondary Entity */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <User size={14} className="text-zinc-400" />
+                  <span className="text-sm font-bold text-white">FVLAN</span>
+                </div>
+                <div className="text-[10px] text-zinc-600 uppercase font-bold">
+                  Network System Involved
+                </div>
+              </div>
+
+              {/* Destinations */}
+              <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Globe size={14} className="text-zinc-400" />
+                  <span className="text-sm font-bold text-white">3 Destinations</span>
+                </div>
+                <div className="text-[10px] text-zinc-600 uppercase font-bold">
+                  Countries Entities Contacted
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Hunt Results Summary */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-6">Hunt Results Summary</h3>
+            
+            <div className="space-y-6">
+              {/* Correlated Matches */}
+              <div className="text-center">
+                <div className="text-5xl font-black text-emerald-400 mb-2">{selectedHunt.matchesFound}</div>
+                <div className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Correlated Matches</div>
+              </div>
+
+              {/* Total Activity */}
+              <div className="text-center pt-6 border-t border-zinc-800">
+                <div className="text-4xl font-black text-white mb-2">32m</div>
+                <div className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Total Activity Span</div>
+              </div>
+
+              {/* Signals Satisfied */}
+              <div className="pt-6 border-t border-zinc-800">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-zinc-400 uppercase">Signals Satisfied</span>
+                  <span className="text-sm font-black text-emerald-400">2 of 2</span>
+                </div>
+                <div className="w-full h-2 bg-zinc-950 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500" style={{ width: '100%' }} />
+                </div>
+                <p className="text-[10px] text-zinc-600 mt-2">
+                  All configured scoring criteria were associated output.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Next Actions */}
+          <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-4">Next Actions</h3>
+            
+            <div className="space-y-2">
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Create investigation case</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Review affected entities</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+
+              <button className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-left hover:bg-zinc-800 transition-all group">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Re-run hunt with adjustments</span>
+                  <ArrowRight size={14} className="text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* Footer Stats */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+        <div className="flex items-center justify-between text-xs text-zinc-500">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Database size={14} className="text-emerald-400" />
+              <span className="font-bold uppercase">Total Data: 2.6 GB</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock size={14} className="text-blue-400" />
+              <span className="font-bold uppercase">12:1</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield size={14} className="text-purple-400" />
+              <span className="font-bold uppercase">45 MB/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
   return (
     <div className="min-h-screen text-white">

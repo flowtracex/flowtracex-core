@@ -422,16 +422,21 @@ const FieldPickerModal = () => {
         
         {/* GENERAL INFORMATION */}
 <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-  <div className="flex items-center gap-2 mb-3">
+  <div className="flex items-start gap-2 mb-3">
     <FileText size={14} className="text-blue-400" />
-    <h3 className="text-xs font-black text-white uppercase tracking-widest">
-      General Information
+    <div className="flex- flex-column">
+      <h3 className="text-xs font-black text-white uppercase tracking-widest">
+      Detection Definition
     </h3>
+      <p className="text-[10px] text-zinc-600 font-bold  tracking-[0.2em] mt-1">Describe what this detection identifies and how it should be classified.</p>
+
+    </div>
+    
   </div>
 
-  <div className="grid grid-cols-12 gap-3 items-end">
+  <div className="grid grid-cols-12 w-full gap-3 d-flex items-end">
     {/* Rule Name */}
-    <div className="col-span-4 space-y-1">
+    <div className="col-span-8 space-y-1 ">
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
         Rule Name *
       </label>
@@ -444,7 +449,7 @@ const FieldPickerModal = () => {
     </div>
 
     {/* Severity */}
-    <div className="col-span-2 space-y-1">
+    <div className="col-span-4 space-y-1 " >
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
         Severity
       </label>
@@ -461,18 +466,20 @@ const FieldPickerModal = () => {
     </div>
 
     {/* Description */}
-    <div className="col-span-6 space-y-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Description
-      </label>
-      <input
-        type="text"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none"
-      />
-    </div>
+   
   </div>
+   <div className="col-span-6 space-y-1 mt-1">
+      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
+       Detection Description
+      </label>
+      <textarea
+  value={description}
+  onChange={e => setDescription(e.target.value)}
+  rows={4}
+  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none resize-none"
+  placeholder="What suspicious behavior does this detection represent?"
+/>
+    </div>
 </section>
 
 {/* EXECUTION + MITRE */}
@@ -480,15 +487,17 @@ const FieldPickerModal = () => {
   <div className="flex items-center gap-2 mb-3">
     <Clock size={14} className="text-[#006bb4]" />
     <h3 className="text-xs font-black text-white uppercase tracking-widest">
-      Execution & Mapping
+      When and How This Detection Runs
     </h3>
   </div>
 
+  <div className="space-y-3">
+  {/* Row 1 */}
   <div className="grid grid-cols-12 gap-3 items-end">
     {/* Run Mode */}
-    <div className="col-span-3 space-y-1">
+    <div className="col-span-4 space-y-1">
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Run Mode
+        Execution Mode
       </label>
       <div className="flex gap-2">
         {['realtime', 'scheduled'].map(mode => (
@@ -507,9 +516,9 @@ const FieldPickerModal = () => {
     </div>
 
     {/* Repeat */}
-    <div className={`col-span-2 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
+    <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Repeat
+        Evaluation Frequency
       </label>
       <input
         type="number"
@@ -519,7 +528,7 @@ const FieldPickerModal = () => {
       />
     </div>
 
-    <div className={`col-span-2 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
+    <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
         Unit
       </label>
@@ -535,9 +544,9 @@ const FieldPickerModal = () => {
     </div>
 
     {/* Lookback */}
-    <div className="col-span-1 space-y-1">
+    <div className="col-span-2 space-y-1">
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Lookback
+        Data Lookback
       </label>
       <input
         type="number"
@@ -546,11 +555,14 @@ const FieldPickerModal = () => {
         className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
       />
     </div>
+  </div>
 
+  {/* Row 2 */}
+  <div className="grid grid-cols-12 gap-3 items-end">
     {/* MITRE */}
-    <div className="col-span-3 space-y-1">
+    <div className="col-span-10 space-y-1">
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        MITRE Tactic
+        Threat Context
       </label>
       <select
         value={tactic}
@@ -564,9 +576,9 @@ const FieldPickerModal = () => {
       </select>
     </div>
 
-    <div className="col-span-1 space-y-1">
+    <div className="col-span-2 space-y-1">
       <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Tech ID
+        Technique
       </label>
       <input
         type="text"
@@ -577,6 +589,7 @@ const FieldPickerModal = () => {
       />
     </div>
   </div>
+</div>
 </section>
       </div>
   
@@ -605,13 +618,13 @@ const FieldPickerModal = () => {
         {/* DETECTION STRATEGY */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 space-y-2">
           <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-            Detection Strategy
+            Detection Method
           </label>
   
           {[
-            { id: 'query', label: 'Event Query', icon: Search },
-            { id: 'threshold', label: 'Threshold', icon: TrendingUp },
-            { id: 'ml', label: 'ML Anomaly', icon: Brain, disabled: true },
+            { id: 'query', label: 'Event-based', icon: Search },
+            { id: 'threshold', label: 'Threshold-based', icon: TrendingUp },
+            { id: 'ml', label: 'ML-based (future)', icon: Brain, disabled: true },
           ].map(s => (
             <button
               key={s.id}
@@ -646,7 +659,7 @@ const FieldPickerModal = () => {
       <FieldPickerModal />
   
       {/* STAGE 1: Identity */}
-      <section className="space-y-6">
+      {/* <section className="space-y-6">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 font-bold">01</div>
           <div>
@@ -678,7 +691,7 @@ const FieldPickerModal = () => {
             </select>
           </div>
         </div>
-      </section>
+      </section> */}
   
       {/* STAGE 2: Detection Logic */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 shadow-xl space-y-12">
@@ -690,11 +703,15 @@ const FieldPickerModal = () => {
                 <Zap size={24} className="text-blue-500" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-zinc-100">Stage 01: Initial Trigger</h2>
-                <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[0]?.source.toUpperCase() || 'DNS.LOG'})</p>
+                <h2 className="text-base font-bold text-zinc-100">Primary Detection Condition</h2>
+                {/* <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[0]?.source.toUpperCase() || 'DNS.LOG'})</p> */}
+                <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Define the network activity that should trigger this detection.</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <button className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-lg text-[9px] font-black text-blue-400 uppercase tracking-widest">
+                Trigger_Source
+              </button>
               <select 
                 value={logicGroups[0]?.source || 'Network Data'}
                 onChange={e => setLogicGroups(logicGroups.map((g, i) => i === 0 ? {...g, source: e.target.value} : g))}
@@ -704,15 +721,21 @@ const FieldPickerModal = () => {
                 <option value="Endpoint Logs">http.log</option>
                 <option value="Auth Service">flow.log</option>
               </select>
-              <button className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-lg text-[9px] font-black text-blue-400 uppercase tracking-widest">
-                Trigger_Source
-              </button>
+              
             </div>
           </div>
   
           <div className="space-y-4">
+            
             {/* Parameters */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Activity size={13} className="text-blue-400" />
+                <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
+                  Condition
+                </span>
+                
+              </div>
               {logicGroups[0]?.conditions.map((cond) => (
                 <div key={cond.id} className="flex items-center gap-3">
                   <div className="relative flex-1">
@@ -775,19 +798,19 @@ const FieldPickerModal = () => {
               <div className="flex items-center gap-2 mb-3">
                 <Activity size={13} className="text-blue-400" />
                 <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
-                  Time-Bucket Logic
+                  When should this condition be considered suspicious?
                 </span>
-                <span className="text-[9px] text-zinc-600 uppercase">
+                {/* <span className="text-[9px] text-zinc-600 uppercase">
                   Agg: COUNT(*)
-                </span>
+                </span> */}
               </div>
   
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                    Occ
+                    Occurs more than 
                   </span>
-                  <span className="text-xs text-zinc-500">&gt;</span>
+                  {/* <span className="text-xs text-zinc-500">&gt;</span> */}
                   <input
                     type="number"
                     value={thresholdHits}
@@ -798,7 +821,7 @@ const FieldPickerModal = () => {
   
                 <div className="flex items-center gap-2">
                   <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                    Window
+                    times within 
                   </span>
                   <input
                     type="number"
@@ -927,9 +950,10 @@ const FieldPickerModal = () => {
                     <Sparkles size={24} className="text-red-500" />
                   </div>
                   <div>
-                    <h2 className="text-base font-bold text-zinc-100">Stage 02: Correlated Anomaly</h2>
-                    <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[1]?.source.toUpperCase() || 'HTTP.LOG'})</p>
-                  </div>
+                    <h2 className="text-base font-bold text-zinc-100">Correlated Detection Condition</h2>
+                    <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">This condition must also be met to trigger the detection.</p> 
+                    {/* <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[1]?.source.toUpperCase() || 'HTTP.LOG'})</p> */}
+                  </div> 
                 </div>
                 <div className="flex items-center gap-3">
                   <select 
@@ -1069,7 +1093,7 @@ const FieldPickerModal = () => {
         {logicGroups.length === 1 && (
           <div className="border-2 border-dashed border-zinc-800/50 rounded-xl p-8 flex items-center justify-center hover:border-red-500/30 transition-all group cursor-pointer" onClick={addLogicGroup}>
             <span className="text-xs font-bold text-zinc-600 group-hover:text-red-500 transition-colors uppercase tracking-widest">
-              ＋ Add Second Group for Correlation
+              ＋ Add Correlated Condition 
             </span>
           </div>
         )}
@@ -1148,80 +1172,310 @@ const FieldPickerModal = () => {
   
   // [Rest of the code remains the same...]
 
-  const renderStep3Review = () => (
-    <div className="max-w-4xl mx-auto animate-in fade-in duration-300">
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-16 shadow-2xl relative overflow-hidden">
-        {/* Background decoration */}
-        {/* <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-[#006bb4] pointer-events-none">
-          <ShieldCheck size={280} />
-        </div> */}
-        
-        {/* Content */}
-        <div className="relative z-10 text-center space-y-8">
-          {/* Icon */}
-          <div className="flex justify-center">
-            <div className="p-6 bg-[#006bb410] border border-[#006bb444] rounded-2xl">
-              <Clock size={48} className="text-[#006bb4]" />
+  // Replace the existing renderStep3Review function with this:
+
+const renderStep3Review = () => (
+  <div className="max-w-5xl mx-auto animate-in fade-in duration-300">
+    {/* Header */}
+    <div className="mb-8 text-center">
+      <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">
+        Review & Deploy
+      </h2>
+      <p className="text-xs text-zinc-500 font-medium">
+        Verify your detection rule configuration before deployment
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left Column - Rule Identity & Execution */}
+      <div className="space-y-6">
+        {/* Rule Identity */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <FileText size={18} className="text-blue-400" />
             </div>
-          </div>
-          
-          {/* Heading */}
-          <div className="space-y-3">
-            <h3 className="text-3xl font-black text-white tracking-tighter uppercase">
-              Coming Soon
+            <h3 className="text-sm font-black text-white uppercase tracking-wide">
+              Rule Identity
             </h3>
-            <p className="text-sm text-zinc-500 font-medium tracking-tight max-w-md mx-auto">
-              Review & validation features are currently in development. 
-              Your rule configuration will be saved automatically.
-            </p>
           </div>
-          
-          {/* Progress indicator */}
-          <div className="flex justify-center gap-2 pt-6">
-            <div className="w-2 h-2 rounded-full bg-[#006bb4] animate-pulse"></div>
-            <div className="w-2 h-2 rounded-full bg-[#006bb4] animate-pulse" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-2 h-2 rounded-full bg-[#006bb4] animate-pulse" style={{animationDelay: '0.4s'}}></div>
-          </div>
-          
-          {/* Info cards */}
-          <div className="grid grid-cols-3 gap-4 pt-8 max-w-2xl mx-auto">
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">
+
+          <div className="space-y-3">
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
                 Rule Name
               </p>
-              <p className="text-xs font-black text-white uppercase truncate">
-                {ruleName || 'Untitled'}
+              <p className="text-sm font-bold text-white">
+                {ruleName || 'Untitled Rule'}
               </p>
             </div>
-            
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
                 Severity
               </p>
-              <p className="text-xs font-black text-blue-400 uppercase">
-                {severity}
-              </p>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  severity === 'critical' ? 'bg-red-500' :
+                  severity === 'high' ? 'bg-orange-500' :
+                  severity === 'medium' ? 'bg-blue-500' : 'bg-zinc-500'
+                }`} />
+                <p className="text-sm font-bold text-white capitalize">
+                  {severity}
+                </p>
+              </div>
             </div>
-            
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
                 Status
               </p>
-              <p className="text-xs font-black text-zinc-500 uppercase">
-                Draft
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-950 border border-zinc-800 rounded-md">
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+                <p className="text-xs font-bold text-zinc-400 uppercase">
+                  Draft
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Risk Score
+              </p>
+              <p className="text-sm font-bold text-blue-400">
+                {riskScore} / 100
               </p>
             </div>
           </div>
         </div>
+
+        {/* Execution Context */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+            <div className="p-2 bg-emerald-500/10 rounded-lg">
+              <Clock size={18} className="text-emerald-400" />
+            </div>
+            <h3 className="text-sm font-black text-white uppercase tracking-wide">
+              Execution Context
+            </h3>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Execution
+              </p>
+              <p className="text-sm font-bold text-white capitalize">
+                {frequency}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Data Source
+              </p>
+              <p className="text-sm font-bold text-white">
+                Network telemetry ({logicGroups[0]?.source || 'Zeek'})
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Lookback Window
+              </p>
+              <p className="text-sm font-bold text-white">
+                Last {lookback} {lookback === 1 ? 'minute' : 'minutes'}
+              </p>
+            </div>
+
+            {frequency === 'scheduled' && (
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                  Schedule
+                </p>
+                <p className="text-sm font-bold text-white">
+                  Every {repeatValue} {repeatUnit.toLowerCase()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Middle Column - Detection Logic Summary */}
+      <div className="lg:col-span-2 space-y-6">
+        {/* Detection Logic */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-6">
+          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Zap size={18} className="text-purple-400" />
+            </div>
+            <h3 className="text-sm font-black text-white uppercase tracking-wide">
+              Detection Logic
+            </h3>
+          </div>
+
+          {/* Stage 1 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
+                <span className="text-blue-400 font-black text-xs">1</span>
+              </div>
+              <span className="text-xs font-bold text-white uppercase">Primary Condition</span>
+            </div>
+
+            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
+                <span className="text-xs font-mono text-blue-400">{logicGroups[0]?.source}</span>
+              </div>
+              
+              {logicGroups[0]?.conditions.map((cond, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-xs font-mono">
+                  <span className="text-emerald-400">{cond.field}</span>
+                  <span className="text-zinc-600">{cond.operator}</span>
+                  <span className="text-pink-400">{cond.value}</span>
+                </div>
+              ))}
+
+              <div className="pt-2 mt-2 border-t border-zinc-800">
+                <div className="text-[10px] text-zinc-500">
+                  <span className="font-bold">Threshold:</span> More than {thresholdHits} times within {thresholdWindow} {thresholdUnit.toLowerCase()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stage 2 - Correlation */}
+          {logicGroups.length > 1 && (
+            <>
+              <div className="flex items-center justify-center">
+                <div className="px-4 py-1.5 bg-zinc-950 border border-emerald-500/50 rounded-full">
+                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                    Correlated Within 5m
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center">
+                    <span className="text-red-400 font-black text-xs">2</span>
+                  </div>
+                  <span className="text-xs font-bold text-white uppercase">Correlated Condition</span>
+                </div>
+
+                <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
+                    <span className="text-xs font-mono text-red-400">{logicGroups[1]?.source}</span>
+                  </div>
+                  
+                  {logicGroups[1]?.conditions.map((cond, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs font-mono">
+                      <span className="text-emerald-400">{cond.field}</span>
+                      <span className="text-zinc-600">{cond.operator}</span>
+                      <span className="text-pink-400">{cond.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* MITRE Mapping */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+            <div className="p-2 bg-orange-500/10 rounded-lg">
+              <Shield size={18} className="text-orange-400" />
+            </div>
+            <h3 className="text-sm font-black text-white uppercase tracking-wide">
+              MITRE ATT&CK Mapping
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Tactic
+              </p>
+              <p className="text-sm font-bold text-white">
+                {tactic}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
+                Technique
+              </p>
+              <p className="text-sm font-mono font-bold text-orange-400">
+                {techniqueId}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        {description && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+              <div className="p-2 bg-zinc-700/30 rounded-lg">
+                <MessageSquare size={18} className="text-zinc-400" />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">
+                Description
+              </h3>
+            </div>
+
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              {description}
+            </p>
+          </div>
+        )}
+
+        {/* Deploy Actions */}
+        <div className="bg-gradient-to-br from-emerald-900/20 to-blue-900/20 border border-emerald-500/30 rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-4 border-b border-emerald-500/20">
+            <div className="p-2 bg-emerald-500/20 rounded-lg">
+              <Zap size={18} className="text-emerald-400" fill="currentColor" />
+            </div>
+            <h3 className="text-sm font-black text-white uppercase tracking-wide">
+              Deploy Action
+            </h3>
+          </div>
+
+          <p className="text-xs text-zinc-400">
+            Ready to deploy this detection rule to your SOC environment. The rule will start monitoring for suspicious activity based on your configured logic.
+          </p>
+
+          <div className="flex gap-3 pt-2">
+            <button 
+              onClick={() => setCurrentStep(2)}
+              className="flex-1 px-6 py-3 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+            >
+              <ArrowRight size={16} className="rotate-180" />
+              Back to Logic
+            </button>
+            <button 
+              onClick={() => setActiveTab('library')}
+              className="flex-1 px-6 py-3 bg-emerald-600 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20"
+            >
+              <Send size={16} />
+              Deploy Rule
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  );
+  </div>
+);
 
   const renderStepHeader = () => (
     <div className="flex items-center justify-center gap-16 mb-10 relative">
        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[1px] w-[300px] bg-zinc-800 -z-10" />
        {[
-         { step: 1, label: 'About', icon: User },
+         { step: 1, label: 'Define', icon: User }, 
          { step: 2, label: 'Logic', icon: Zap },
          { step: 3, label: 'Review', icon: ListChecks },
        ].map(s => (
@@ -1241,8 +1495,8 @@ const FieldPickerModal = () => {
          <div className="flex items-center gap-4">
             <div className="p-3.5 bg-blue-500/10 rounded-lg text-[#006bb4] border border-[#006bb422]"><Shield size={24}/></div>
             <div>
-               <h2 className="text-2xl font-black text-white uppercase tracking-tight">Detection Engine</h2>
-               <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em] mt-1">SIEM Engineering & Logic Wizard</p>
+               <h2 className="text-2xl font-black text-white uppercase tracking-tight">NEW DETECTION RULE</h2>
+               <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em] mt-1">Define how suspicious behavior is identified in real time</p>
             </div>
          </div>
          <div className="flex items-center gap-8"><div className="text-right"><p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Version</p><p className="text-[11px] font-mono font-bold text-zinc-500">v4.2.0-PRD</p></div><button onClick={() => setActiveTab('library')} className="p-2 text-zinc-700 hover:text-white"><X size={24}/></button></div>

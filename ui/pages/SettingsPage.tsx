@@ -83,7 +83,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderProfile = () => (
-    <div className="max-w-5xl animate-in fade-in duration-300">
+    <div className=" animate-in fade-in w-100 duration-300">
       {Breadcrumb('User Profile', 
         <button className="bg-[#00D4AA] text-black px-6 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#059669] transition-all">Save Changes</button>
       )}
@@ -243,7 +243,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderNotifications = () => (
-    <div className="max-w-5xl animate-in fade-in duration-300">
+    <div className=" animate-in fade-in duration-300">
       {Breadcrumb('Notifications')}
       
       <Card title="Important Notification Triggers">
@@ -319,7 +319,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderDetection = () => (
-    <div className="max-w-5xl animate-in fade-in duration-300">
+    <div className="animate-in fade-in duration-300">
       {Breadcrumb('Detection Config',
         <button className="bg-[#00D4AA] text-black px-6 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#059669] transition-all">Save Config</button>
       )}
@@ -474,7 +474,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderStorage = () => (
-    <div className="max-w-6xl animate-in fade-in duration-300">
+    <div className=" animate-in fade-in duration-300">
       {Breadcrumb('Storage & Retention', 
         <button className="bg-[#00D4AA] text-black px-6 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#059669] transition-all flex items-center gap-2">
           <Save size={14}/> Save Lifecycle
@@ -564,7 +564,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderApiKeys = () => (
-    <div className="max-w-4xl mx-auto animate-in fade-in duration-500 py-20">
+    <div className=" mx-auto animate-in fade-in duration-500 py-20">
       {Breadcrumb('API Keys')}
       
       <div className="flex flex-col items-center justify-center text-center space-y-8 bg-[#161618] border border-[#1e1e20] rounded-[40px] p-20 shadow-2xl relative overflow-hidden group">
@@ -595,7 +595,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderAudit = () => (
-    <div className="max-w-full animate-in fade-in duration-300">
+    <div className=" animate-in fade-in duration-300">
       {Breadcrumb('Audit Logs', 
         <div className="flex gap-2">
           <button className="flex items-center gap-2 bg-[#1e1e20] border border-[#333] px-4 py-1.5 rounded-lg text-[10px] font-black text-gray-400 hover:text-white transition-all uppercase tracking-widest"><Download size={14}/> Export</button>
@@ -677,7 +677,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   );
 
   const renderSystem = () => (
-    <div className="max-w-4xl mx-auto animate-in fade-in duration-300">
+    <div className=" mx-auto animate-in fade-in duration-300">
       {Breadcrumb('License & System')}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -793,7 +793,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto pb-32 px-4 md:px-0">
+    <div className="max-w-[1300px] mx-auto pb-32 px-4 md:px-0">
       {renderContent()}
     </div>
   );

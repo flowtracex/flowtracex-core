@@ -4,12 +4,12 @@ import {
   BarChart3, ChevronDown, FolderOpen, Wifi, Plug, Zap, Bell, Shield, 
   Database, Key, FileText, Tag, List, BarChart2, PlusCircle, History, 
   Search, PieChart, Settings2, TrendingUp, Workflow, HeartPulse, 
-  FlameKindling, Globe2, Settings, User, BookOpen, FileSearch
+  FlameKindling, Globe2, Settings, User, BookOpen, FileSearch, AlertTriangle
 } from 'lucide-react';
 
 export type PageId = 
   | 'dashboard' 
-  | 'detections' | 'detections-feed' | 'detections-analytics' 
+  | 'detections' | 'alert-feed' | 'detections-feed' | 'detections-analytics' 
   | 'investigations' | 'investigations-list' | 'investigations-analytics'
   | 'threat-hunting' | 'threat-hunting-builder' | 'threat-hunting-history' 
   | 'network-view' 
@@ -53,9 +53,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
       id: 'detections',
       label: 'Detections',
       icon: ShieldAlert,
-      expanded: detectionsExpanded,
+      expanded: detectionsExpanded, 
       setExpanded: setDetectionsExpanded,
       subItems: [
+        { id: 'alert-feed', label: 'Alert Feed', icon: AlertTriangle },
         { id: 'detections-feed', label: 'Detection Feed', icon: List },
         { id: 'detections-analytics', label: 'Analytics', icon: BarChart2 }
       ]
@@ -169,7 +170,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
 
         {navGroups.map((group) => {
           const Icon = group.icon;
-          const isActive = activePage.startsWith(group.id);
+          const isActive = activePage.startsWith(group.id) || (group.id === 'detections' && activePage === 'alert-feed');
           
           return (
             <div key={group.id} className="space-y-1">

@@ -41,7 +41,7 @@ const NETWORK_ACTIVITY_DATA = [
   { time: '23', value: 43, alert: false },
 ];
 
-const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
+const AlertDetailPage: React.FC<Props> = ({ id, onBack }) => {
   const [activeTab, setActiveTab] = useState('explanation');
   const [behaviorTab, setBehaviorTab] = useState('network');
   const [isEscalateOpen, setIsEscalateOpen] = useState(false);
@@ -929,4 +929,4 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
   );
 };
 
-export default DetectionDetailPage;
+export default AlertDetailPage;
