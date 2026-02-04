@@ -73,6 +73,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
   const [activeFieldInput, setActiveFieldInput] = useState<{groupId: string, condId: string, fieldType: 'field' | 'value'} | null>(null);
   const [modalTab, setModalTab] = useState<'default' | 'enriched' | 'datasets' | 'static'>('default');
   const [selectedDefaultField, setSelectedDefaultField] = useState<string | null>(null);
+
   // Field Catalog Data
   const fieldCatalog = {
     default: [
@@ -132,495 +133,409 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
   const openFieldModal = (groupId: string, condId: string, fieldType: 'field' | 'value') => {
     setActiveFieldInput({ groupId, condId, fieldType });
     setModalTab(fieldType === 'field' ? 'default' : 'datasets');
-    setSelectedDefaultField(null); // Reset selected field
+    setSelectedDefaultField(null);
     setShowFieldModal(true);
   };
   
   const closeFieldModal = () => {
     setShowFieldModal(false);
     setActiveFieldInput(null);
-    setSelectedDefaultField(null); // Reset when closing
+    setSelectedDefaultField(null);
   };
 
   const selectFieldValue = (value: string) => {
    if (activeFieldInput) {
      const { groupId, condId, fieldType } = activeFieldInput;
-     
-     // Handle correlation join keys
      if (groupId === 'correlation-g1' && condId === 'join-key') {
        setThresholdField(value);
      } else if (groupId === 'correlation-g2' && condId === 'join-key') {
-       // Handle second correlation key (you might want to add state for this)
        console.log('Group B join key:', value);
      } else if (groupId === 'dedup' && condId === 'key') {
-       // Handle deduplication key addition
        console.log('Add dedup key:', value);
-       // You can add logic here to add the key to a deduplication keys array
      } else {
-       // Handle normal condition fields/values
        updateCondition(groupId, condId, fieldType === 'field' ? { field: value } : { value });
      }
    }
    closeFieldModal();
  };
 
-  // Field Picker Modal Component
-// Update the FieldPickerModal component - replace the entire value picker section:
-
-const FieldPickerModal = () => {
-  if (!showFieldModal) return null;
-
-  const isFieldPicker = activeFieldInput?.fieldType === 'field';
-  
-  if (isFieldPicker) {
-    // Field picker - show enriched fields only when a default field is selected
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-        <div 
-          className={`bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 transition-all ${
-            selectedDefaultField ? 'w-[720px]' : 'w-[450px]'
-          }`}
-        >
-          <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">
-              Select Field
-            </h3>
-            <button 
-              onClick={() => {
-                setSelectedDefaultField(null);
-                closeFieldModal();
-              }}
-              className="text-zinc-500 hover:text-white transition-colors text-lg leading-none"
-            >
-              ✕
-            </button>
-          </div>
-          
-          <div className={`grid ${selectedDefaultField ? 'grid-cols-2' : 'grid-cols-1'}`}>
-            {/* Left Side - Default Fields */}
-            <div className={selectedDefaultField ? 'border-r border-zinc-800' : ''}>
-              <div className="p-3 bg-zinc-900/20 border-b border-zinc-800">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Default Fields</h4>
-              </div>
-              <div className="p-2 max-h-[320px] overflow-y-auto">
-                {fieldCatalog.default.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => {
-                      if (selectedDefaultField === item.id) {
-                        // If clicking the same field, select it
-                        selectFieldValue(item.id);
-                        setSelectedDefaultField(null);
-                      } else {
-                        // Show enriched fields for this default field
-                        setSelectedDefaultField(item.id);
-                      }
-                    }}
-                    className={`p-3 mb-1 rounded-xl cursor-pointer border transition-all group ${
-                      selectedDefaultField === item.id
-                        ? 'bg-zinc-800 border-blue-500/50'
-                        : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
-                    }`}
-                  >
-                    <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
-                      {item.id}
-                      {selectedDefaultField === item.id && (
-                        <span className="text-blue-400 text-[9px]">→</span>
-                      )}
-                    </div>
-                    <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
-                  </div>
-                ))}
-              </div>
+  // ─── FIELD PICKER MODAL ────────────────────────────────────────────
+  const FieldPickerModal = () => {
+    if (!showFieldModal) return null;
+    const isFieldPicker = activeFieldInput?.fieldType === 'field';
+    
+    if (isFieldPicker) {
+      return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div 
+            className={`bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 transition-all ${
+              selectedDefaultField ? 'w-[720px]' : 'w-[450px]'
+            }`}
+          >
+            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">Select Field</h3>
+              <button 
+                onClick={() => { setSelectedDefaultField(null); closeFieldModal(); }}
+                className="text-zinc-500 hover:text-white transition-colors text-lg leading-none"
+              >✕</button>
             </div>
-
-            {/* Right Side - Enriched Fields (only shown when default field selected) */}
-            {selectedDefaultField && (
-              <div className="animate-in slide-in-from-right duration-200">
-                <div className="p-3 bg-zinc-900/20 border-b border-zinc-800 flex items-center justify-between">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-500">
-                    Enriched Fields for {selectedDefaultField}
-                  </h4>
-                  <button
-                    onClick={() => setSelectedDefaultField(null)}
-                    className="text-[9px] text-zinc-500 hover:text-zinc-300 font-bold uppercase tracking-widest"
-                  >
-                    ← Back
-                  </button>
+            
+            <div className={`grid ${selectedDefaultField ? 'grid-cols-2' : 'grid-cols-1'}`}>
+              {/* Left — Default Fields */}
+              <div className={selectedDefaultField ? 'border-r border-zinc-800' : ''}>
+                <div className="p-3 bg-zinc-900/20 border-b border-zinc-800">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Default Fields</h4>
                 </div>
                 <div className="p-2 max-h-[320px] overflow-y-auto">
-                  {fieldCatalog.enriched.map((item) => (
+                  {fieldCatalog.default.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => {
-                        selectFieldValue(item.id);
-                        setSelectedDefaultField(null);
+                        if (selectedDefaultField === item.id) {
+                          selectFieldValue(item.id);
+                          setSelectedDefaultField(null);
+                        } else {
+                          setSelectedDefaultField(item.id);
+                        }
                       }}
-                      className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-blue-700/30 transition-all group"
+                      className={`p-3 mb-1 rounded-xl cursor-pointer border transition-all group ${
+                        selectedDefaultField === item.id
+                          ? 'bg-zinc-800 border-blue-500/50'
+                          : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
+                      }`}
                     >
-                      <div className="text-[11px] font-bold font-mono text-blue-400">{item.id}</div>
+                      <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
+                        {item.id}
+                        {selectedDefaultField === item.id && <span className="text-blue-400 text-[9px]">→</span>}
+                      </div>
                       <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
                     </div>
                   ))}
-                  
-                  {/* Option to select the base field */}
-                  <div className="mt-4 pt-4 border-t border-zinc-800">
-                    <div
-                      onClick={() => {
-                        selectFieldValue(selectedDefaultField);
-                        setSelectedDefaultField(null);
-                      }}
-                      className="p-3 rounded-xl hover:bg-blue-600/10 cursor-pointer border border-blue-500/30 hover:border-blue-500/50 transition-all"
-                    >
-                      <div className="text-[11px] font-bold font-mono text-zinc-300">
-                        Use base field: {selectedDefaultField}
+                </div>
+              </div>
+
+              {/* Right — Enriched Fields */}
+              {selectedDefaultField && (
+                <div className="animate-in slide-in-from-right duration-200">
+                  <div className="p-3 bg-zinc-900/20 border-b border-zinc-800 flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-500">
+                      Enriched Fields for {selectedDefaultField}
+                    </h4>
+                    <button onClick={() => setSelectedDefaultField(null)} className="text-[9px] text-zinc-500 hover:text-zinc-300 font-bold uppercase tracking-widest">← Back</button>
+                  </div>
+                  <div className="p-2 max-h-[320px] overflow-y-auto">
+                    {fieldCatalog.enriched.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => { selectFieldValue(item.id); setSelectedDefaultField(null); }}
+                        className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-blue-700/30 transition-all group"
+                      >
+                        <div className="text-[11px] font-bold font-mono text-blue-400">{item.id}</div>
+                        <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
                       </div>
-                      <div className="text-[9px] text-zinc-500 mt-1">Select the original field without enrichment</div>
+                    ))}
+                    <div className="mt-4 pt-4 border-t border-zinc-800">
+                      <div
+                        onClick={() => { selectFieldValue(selectedDefaultField); setSelectedDefaultField(null); }}
+                        className="p-3 rounded-xl hover:bg-blue-600/10 cursor-pointer border border-blue-500/30 hover:border-blue-500/50 transition-all"
+                      >
+                        <div className="text-[11px] font-bold font-mono text-zinc-300">Use base field: {selectedDefaultField}</div>
+                        <div className="text-[9px] text-zinc-500 mt-1">Select the original field without enrichment</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 bg-zinc-900/50 border-t border-zinc-800 text-[9px] text-zinc-500 uppercase font-bold tracking-tighter">
-            Phase-1 Engine • Automatic Fact Discovery Enabled
+              )}
+            </div>
+            <div className="p-4 bg-zinc-900/50 border-t border-zinc-800 text-[9px] text-zinc-500 uppercase font-bold tracking-tighter">
+              Phase-1 Engine • Automatic Fact Discovery Enabled
+            </div>
           </div>
         </div>
-      </div>
-    );
-  } else {
-    // Value picker - show datasets only when a static value is selected
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-        <div 
-          className={`bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 transition-all ${
-            selectedDefaultField ? 'w-[720px]' : 'w-[450px]'
-          }`}
-        >
-          <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">
-              Select Value
-            </h3>
-            <button 
-              onClick={() => {
-                setSelectedDefaultField(null);
-                closeFieldModal();
-              }}
-              className="text-zinc-500 hover:text-white transition-colors text-lg leading-none"
-            >
-              ✕
-            </button>
-          </div>
-          
-          <div className={`grid ${selectedDefaultField ? 'grid-cols-2' : 'grid-cols-1'}`}>
-            {/* Left Side - Static Values */}
-            <div className={selectedDefaultField ? 'border-r border-zinc-800' : ''}>
-              <div className="p-3 bg-zinc-900/20 border-b border-zinc-800">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Common Values</h4>
-              </div>
-              <div className="p-2 max-h-[320px] overflow-y-auto">
-                {valueCatalog.static.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => {
-                      if (selectedDefaultField === item.id) {
-                        // If clicking the same value, select it
-                        selectFieldValue(item.id);
-                        setSelectedDefaultField(null);
-                      } else {
-                        // Show datasets for this static value
-                        setSelectedDefaultField(item.id);
-                      }
-                    }}
-                    className={`p-3 mb-1 rounded-xl cursor-pointer border transition-all group ${
-                      selectedDefaultField === item.id
-                        ? 'bg-zinc-800 border-emerald-500/50'
-                        : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
-                    }`}
-                  >
-                    <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
-                      {item.id}
-                      {selectedDefaultField === item.id && (
-                        <span className="text-emerald-400 text-[9px]">→</span>
-                      )}
-                    </div>
-                    <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
-                  </div>
-                ))}
-              </div>
+      );
+    } else {
+      // Value picker
+      return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div 
+            className={`bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 transition-all ${
+              selectedDefaultField ? 'w-[720px]' : 'w-[450px]'
+            }`}
+          >
+            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">Select Value</h3>
+              <button 
+                onClick={() => { setSelectedDefaultField(null); closeFieldModal(); }}
+                className="text-zinc-500 hover:text-white transition-colors text-lg leading-none"
+              >✕</button>
             </div>
-
-            {/* Right Side - Datasets (only shown when static value selected) */}
-            {selectedDefaultField && (
-              <div className="animate-in slide-in-from-right duration-200">
-                <div className="p-3 bg-zinc-900/20 border-b border-zinc-800 flex items-center justify-between">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
-                    Datasets
-                  </h4>
-                  <button
-                    onClick={() => setSelectedDefaultField(null)}
-                    className="text-[9px] text-zinc-500 hover:text-zinc-300 font-bold uppercase tracking-widest"
-                  >
-                    ← Back
-                  </button>
+            
+            <div className={`grid ${selectedDefaultField ? 'grid-cols-2' : 'grid-cols-1'}`}>
+              <div className={selectedDefaultField ? 'border-r border-zinc-800' : ''}>
+                <div className="p-3 bg-zinc-900/20 border-b border-zinc-800">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Common Values</h4>
                 </div>
                 <div className="p-2 max-h-[320px] overflow-y-auto">
-                  {valueCatalog.datasets.map((item) => (
+                  {valueCatalog.static.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => {
-                        selectFieldValue(item.id);
-                        setSelectedDefaultField(null);
+                        if (selectedDefaultField === item.id) {
+                          selectFieldValue(item.id);
+                          setSelectedDefaultField(null);
+                        } else {
+                          setSelectedDefaultField(item.id);
+                        }
                       }}
-                      className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-emerald-700/30 transition-all group"
+                      className={`p-3 mb-1 rounded-xl cursor-pointer border transition-all group ${
+                        selectedDefaultField === item.id
+                          ? 'bg-zinc-800 border-emerald-500/50'
+                          : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
+                      }`}
                     >
-                      <div className="text-[11px] font-bold font-mono text-emerald-400">{item.id}</div>
+                      <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
+                        {item.id}
+                        {selectedDefaultField === item.id && <span className="text-emerald-400 text-[9px]">→</span>}
+                      </div>
                       <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
-                      {item.table && (
-                        <div className="text-[8px] text-zinc-600 mt-1 font-mono">Table: {item.table}</div>
-                      )}
                     </div>
                   ))}
-                  
-                  {/* Option to select the base value */}
-                  <div className="mt-4 pt-4 border-t border-zinc-800">
-                    <div
-                      onClick={() => {
-                        selectFieldValue(selectedDefaultField);
-                        setSelectedDefaultField(null);
-                      }}
-                      className="p-3 rounded-xl hover:bg-emerald-600/10 cursor-pointer border border-emerald-500/30 hover:border-emerald-500/50 transition-all"
-                    >
-                      <div className="text-[11px] font-bold font-mono text-zinc-300">
-                        Use value: {selectedDefaultField}
+                </div>
+              </div>
+
+              {selectedDefaultField && (
+                <div className="animate-in slide-in-from-right duration-200">
+                  <div className="p-3 bg-zinc-900/20 border-b border-zinc-800 flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Datasets</h4>
+                    <button onClick={() => setSelectedDefaultField(null)} className="text-[9px] text-zinc-500 hover:text-zinc-300 font-bold uppercase tracking-widest">← Back</button>
+                  </div>
+                  <div className="p-2 max-h-[320px] overflow-y-auto">
+                    {valueCatalog.datasets.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => { selectFieldValue(item.id); setSelectedDefaultField(null); }}
+                        className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-emerald-700/30 transition-all group"
+                      >
+                        <div className="text-[11px] font-bold font-mono text-emerald-400">{item.id}</div>
+                        <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
+                        {item.table && <div className="text-[8px] text-zinc-600 mt-1 font-mono">Table: {item.table}</div>}
                       </div>
-                      <div className="text-[9px] text-zinc-500 mt-1">Select this common value directly</div>
+                    ))}
+                    <div className="mt-4 pt-4 border-t border-zinc-800">
+                      <div
+                        onClick={() => { selectFieldValue(selectedDefaultField); setSelectedDefaultField(null); }}
+                        className="p-3 rounded-xl hover:bg-emerald-600/10 cursor-pointer border border-emerald-500/30 hover:border-emerald-500/50 transition-all"
+                      >
+                        <div className="text-[11px] font-bold font-mono text-zinc-300">Use value: {selectedDefaultField}</div>
+                        <div className="text-[9px] text-zinc-500 mt-1">Select this common value directly</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 bg-zinc-900/50 border-t border-zinc-800 text-[9px] text-zinc-500 uppercase font-bold tracking-tighter">
-            Phase-1 Engine • Automatic Fact Discovery Enabled
+              )}
+            </div>
+            <div className="p-4 bg-zinc-900/50 border-t border-zinc-800 text-[9px] text-zinc-500 uppercase font-bold tracking-tighter">
+              Phase-1 Engine • Automatic Fact Discovery Enabled
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-};
+      );
+    }
+  };
 
-  // --- Step 1: Definition & Scheduling ---
+  // ─── STEP 1: DEFINE ────────────────────────────────────────────────
   const renderStep1About = () => (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4 animate-in fade-in duration-300">
   
       {/* LEFT SIDE */}
       <div className="space-y-4">
   
-        
-        {/* GENERAL INFORMATION */}
-<section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-  <div className="flex items-start gap-2 mb-3">
-    <FileText size={14} className="text-blue-400" />
-    <div className="flex- flex-column">
-      <h3 className="text-xs font-black text-white uppercase tracking-widest">
-      Detection Definition
-    </h3>
-      <p className="text-[10px] text-zinc-600 font-bold  tracking-[0.2em] mt-1">Describe what this detection identifies and how it should be classified.</p>
+        {/* DETECTION DEFINITION */}
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+          <div className="flex items-start gap-2 mb-3">
+            <FileText size={14} className="text-blue-400" />
+            <div className="flex- flex-column">
+              <h3 className="text-xs font-black text-white uppercase tracking-widest">Detection Definition</h3>
+              <p className="text-[10px] text-zinc-600 font-bold tracking-[0.2em] mt-1">Describe what this detection identifies and how it should be classified.</p>
+            </div>
+          </div>
 
-    </div>
-    
-  </div>
+          <div className="grid grid-cols-12 w-full gap-3 d-flex items-center">
+            {/* Rule Name */}
+            <div className="col-span-8 space-y-1">
+              <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Rule Name *</label>
+              <input
+                type="text"
+                value={ruleName}
+                onChange={e => setRuleName(e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#00D4AA]"
+              />
+            </div>
 
-  <div className="grid grid-cols-12 w-full gap-3 d-flex items-end">
-    {/* Rule Name */}
-    <div className="col-span-8 space-y-1 ">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Rule Name *
-      </label>
-      <input
-        type="text"
-        value={ruleName}
-        onChange={e => setRuleName(e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#00D4AA]"
-      />
-    </div>
+            {/* Severity */}
+            <div className="col-span-4 mt-2 space-y-1">
+              <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Severity</label>
+              <select
+                value={severity}
+                onChange={e => setSeverity(e.target.value as Severity)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none"
+              >
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <p className="text-[9px] text-zinc-600 mt-1">Alert severity when this detection triggers</p>
+            </div>
+          </div>
 
-    {/* Severity */}
-    <div className="col-span-4 space-y-1 " >
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Severity
-      </label>
-      <select
-        value={severity}
-        onChange={e => setSeverity(e.target.value as Severity)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none"
-      >
-        <option value="critical">Critical</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
-    </div>
+          {/* Detection Description */}
+          <div className="col-span-6 space-y-1 mt-3">
+            <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Detection Description</label>
+            <textarea
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              rows={4}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none resize-none"
+              placeholder="What suspicious behavior does this detection represent?"
+            />
+          </div>
+        </section>
 
-    {/* Description */}
-   
-  </div>
-   <div className="col-span-6 space-y-1 mt-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-       Detection Description
-      </label>
-      <textarea
-  value={description}
-  onChange={e => setDescription(e.target.value)}
-  rows={4}
-  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white outline-none resize-none"
-  placeholder="What suspicious behavior does this detection represent?"
-/>
-    </div>
-</section>
+        {/* RULE EXECUTION */}
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock size={14} className="text-[#006bb4]" />
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Rule Execution</h3>
+          </div>
+          <p className="text-[10px] text-zinc-600 font-bold tracking-[0.15em] mb-3 ml-5">When and how often this rule evaluates incoming data.</p>
 
-{/* EXECUTION + MITRE */}
-<section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-  <div className="flex items-center gap-2 mb-3">
-    <Clock size={14} className="text-[#006bb4]" />
-    <h3 className="text-xs font-black text-white uppercase tracking-widest">
-      When and How This Detection Runs
-    </h3>
-  </div>
+          <div className="space-y-3">
+            {/* Row 1 */}
+            <div className="grid grid-cols-12 gap-3 items-end">
+              {/* Execution Mode */}
+              <div className="col-span-4 space-y-1">
+                <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Execution Mode</label>
+                <div className="flex gap-2">
+                  {['realtime', 'scheduled'].map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => setFrequency(mode as any)}
+                      className={`px-3 py-1.5 rounded-md border text-[10px] font-black uppercase
+                        ${frequency === mode
+                          ? 'bg-[#006bb410] border-[#006bb444] text-white'
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-500'}`}
+                    >
+                      {mode === 'realtime' ? 'Real-time' : 'Scheduled'}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-  <div className="space-y-3">
-  {/* Row 1 */}
-  <div className="grid grid-cols-12 gap-3 items-end">
-    {/* Run Mode */}
-    <div className="col-span-4 space-y-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Execution Mode
-      </label>
-      <div className="flex gap-2">
-        {['realtime', 'scheduled'].map(mode => (
-          <button
-            key={mode}
-            onClick={() => setFrequency(mode as any)}
-            className={`px-3 py-1.5 rounded-md border text-[10px] font-black uppercase
-              ${frequency === mode
-                ? 'bg-[#006bb410] border-[#006bb444] text-white'
-                : 'bg-zinc-950 border-zinc-800 text-zinc-500'}`}
-          >
-            {mode}
-          </button>
-        ))}
-      </div>
-    </div>
+              {/* Evaluation Interval */}
+              <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
+                <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Evaluation Interval</label>
+                <input
+                  type="number"
+                  value={repeatValue}
+                  onChange={e => setRepeatValue(+e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
+                />
+              </div>
 
-    {/* Repeat */}
-    <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Evaluation Frequency
-      </label>
-      <input
-        type="number"
-        value={repeatValue}
-        onChange={e => setRepeatValue(+e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
-      />
-    </div>
+              {/* Interval Unit */}
+              <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
+                <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Interval Unit</label>
+                <select
+                  value={repeatUnit}
+                  onChange={e => setRepeatUnit(e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
+                >
+                  <option>Minutes</option>
+                  <option>Hours</option>
+                  <option>Days</option>
+                </select>
+              </div>
 
-    <div className={`col-span-3 space-y-1 ${frequency === 'realtime' && 'opacity-30 pointer-events-none'}`}>
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Unit
-      </label>
-      <select
-        value={repeatUnit}
-        onChange={e => setRepeatUnit(e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
-      >
-        <option>Minutes</option>
-        <option>Hours</option>
-        <option>Days</option>
-      </select>
-    </div>
+              {/* Data Lookback Window */}
+              <div className="col-span-2 space-y-1">
+                <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Data Lookback Window</label>
+                <input
+                  type="number"
+                  value={lookback}
+                  onChange={e => setLookback(+e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
-    {/* Lookback */}
-    <div className="col-span-2 space-y-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Data Lookback
-      </label>
-      <input
-        type="number"
-        value={lookback}
-        onChange={e => setLookback(+e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
-      />
-    </div>
-  </div>
+        {/* THREAT CLASSIFICATION */}
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Shield size={14} className="text-orange-400" />
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Threat Classification</h3>
+          </div>
+          <p className="text-[10px] text-zinc-600 font-bold tracking-[0.15em] mb-3 ml-5">How this detection is categorized for investigation and reporting.</p>
 
-  {/* Row 2 */}
-  <div className="grid grid-cols-12 gap-3 items-end">
-    {/* MITRE */}
-    <div className="col-span-10 space-y-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Threat Context
-      </label>
-      <select
-        value={tactic}
-        onChange={e => setTactic(e.target.value)}
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
-      >
-        <option>Initial Access</option>
-        <option>Execution</option>
-        <option>Persistence</option>
-        <option>Command & Control</option>
-      </select>
-    </div>
+          <div className="grid grid-cols-12 gap-3 items-end">
+            {/* Threat Context (MITRE Tactic) */}
+            <div className="col-span-6 space-y-1">
+              <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Threat Context</label>
+              <select
+                value={tactic}
+                onChange={e => setTactic(e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
+              >
+                <option>Initial Access</option>
+                <option>Execution</option>
+                <option>Persistence</option>
+                <option>Command & Control</option>
+              </select>
+            </div>
 
-    <div className="col-span-2 space-y-1">
-      <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-        Technique
-      </label>
-      <input
-        type="text"
-        value={techniqueId}
-        onChange={e => setTechniqueId(e.target.value)}
-        placeholder="T1078"
-        className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
-      />
-    </div>
-  </div>
-</div>
-</section>
+            {/* Technique */}
+            <div className="col-span-2 space-y-1">
+              <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Technique</label>
+              <input
+                type="text"
+                value={techniqueId}
+                onChange={e => setTechniqueId(e.target.value)}
+                placeholder="T1078"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-sm text-white"
+              />
+            </div>
+
+            {/* Risk Score inline */}
+            <div className="col-span-4 space-y-1">
+              <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Risk Score</label>
+              <div className="flex items-center gap-3 bg-zinc-950 border border-zinc-800 rounded-md px-3 py-1.5">
+                <input
+                  type="range"
+                  min="1"
+                  max="100"
+                  value={riskScore}
+                  onChange={e => setRiskScore(+e.target.value)}
+                  className="flex-1 accent-[#006bb4]"
+                />
+                <span className="text-sm font-black text-[#006bb4] w-8 text-right">{riskScore}</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
   
       {/* RIGHT SIDE */}
       <div className="space-y-4">
-  
-        {/* RISK ANALYTICS */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-          <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-            Risk Score
-          </label>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-zinc-600">Impact</span>
-            <span className="text-2xl font-black text-[#006bb4]">{riskScore}</span>
+        {/* DETECTION METHOD */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-2">
+          <div className="flex items-center gap-2 mb-1">
+            <Target size={14} className="text-blue-400" />
+            <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Detection Method</label>
           </div>
-          <input
-            type="range"
-            min="1"
-            max="100"
-            value={riskScore}
-            onChange={e => setRiskScore(+e.target.value)}
-            className="w-full accent-[#006bb4]"
-          />
-        </div>
-  
-        {/* DETECTION STRATEGY */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 space-y-2">
-          <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-            Detection Method
-          </label>
-  
+          <p className="text-[10px] text-zinc-600 font-bold tracking-[0.15em] mb-2 ml-5">Defines how suspicious behavior is identified.</p>
+
           {[
             { id: 'query', label: 'Event-based', icon: Search },
             { id: 'threshold', label: 'Threshold-based', icon: TrendingUp },
@@ -638,64 +553,24 @@ const FieldPickerModal = () => {
                     : 'border-zinc-800 bg-zinc-950'}`}
             >
               <s.icon size={14} />
-              <span className="text-[11px] font-black uppercase text-white">
-                {s.label}
-              </span>
+              <span className="text-[11px] font-black uppercase text-white">{s.label}</span>
             </button>
           ))}
         </div>
       </div>
     </div>
   );
-  
-  
 
-  // --- Step 2: Logic & Aggregation with Modal ---
-  // Update the renderStep2Logic function with these additions:
-
+  // ─── STEP 2: LOGIC ─────────────────────────────────────────────────
   const renderStep2Logic = () => (
     <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-300">
       {/* Field Picker Modal */}
       <FieldPickerModal />
   
-      {/* STAGE 1: Identity */}
-      {/* <section className="space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 font-bold">01</div>
-          <div>
-            <h2 className="text-base font-bold text-zinc-100">Identity</h2>
-            <p className="text-[11px] text-zinc-500 font-medium tracking-tight">Standard Phase-1 Rule Metadata</p>
-          </div>
-        </div>
-  
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-8">
-            <input 
-              type="text" 
-              value={ruleName}
-              onChange={e => setRuleName(e.target.value)}
-              placeholder="Rule Name..." 
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm font-medium text-white outline-none focus:border-blue-500" 
-            />
-          </div>
-          <div className="col-span-4">
-            <select 
-              value={severity}
-              onChange={e => setSeverity(e.target.value as Severity)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold uppercase tracking-wider text-zinc-400 outline-none"
-            >
-              <option value="critical">Critical</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-        </div>
-      </section> */}
-  
-      {/* STAGE 2: Detection Logic */}
+      {/* MAIN LOGIC CARD */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 shadow-xl space-y-12">
-        {/* STAGE 1: Initial Trigger */}
+
+        {/* ── PRIMARY DETECTION CONDITION ── */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -704,14 +579,10 @@ const FieldPickerModal = () => {
               </div>
               <div>
                 <h2 className="text-base font-bold text-zinc-100">Primary Detection Condition</h2>
-                {/* <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[0]?.source.toUpperCase() || 'DNS.LOG'})</p> */}
                 <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Define the network activity that should trigger this detection.</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-lg text-[9px] font-black text-blue-400 uppercase tracking-widest">
-                Trigger_Source
-              </button>
               <select 
                 value={logicGroups[0]?.source || 'Network Data'}
                 onChange={e => setLogicGroups(logicGroups.map((g, i) => i === 0 ? {...g, source: e.target.value} : g))}
@@ -721,20 +592,15 @@ const FieldPickerModal = () => {
                 <option value="Endpoint Logs">http.log</option>
                 <option value="Auth Service">flow.log</option>
               </select>
-              
             </div>
           </div>
   
           <div className="space-y-4">
-            
-            {/* Parameters */}
+            {/* Condition Rows */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-4">
               <div className="flex items-center gap-2 mb-3">
                 <Activity size={13} className="text-blue-400" />
-                <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
-                  Condition
-                </span>
-                
+                <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">Condition</span>
               </div>
               {logicGroups[0]?.conditions.map((cond) => (
                 <div key={cond.id} className="flex items-center gap-3">
@@ -793,24 +659,17 @@ const FieldPickerModal = () => {
               </button>
             </div>
   
-            {/* Bucket Threshold */}
+            {/* Suspicion Threshold */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Activity size={13} className="text-blue-400" />
                 <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
                   When should this condition be considered suspicious?
                 </span>
-                {/* <span className="text-[9px] text-zinc-600 uppercase">
-                  Agg: COUNT(*)
-                </span> */}
               </div>
-  
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                    Occurs more than 
-                  </span>
-                  {/* <span className="text-xs text-zinc-500">&gt;</span> */}
+                  <span className="text-[9px] text-zinc-600 font-bold uppercase">Occurs more than</span>
                   <input
                     type="number"
                     value={thresholdHits}
@@ -818,11 +677,8 @@ const FieldPickerModal = () => {
                     className="w-16 bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1 text-xs font-bold text-white outline-none"
                   />
                 </div>
-  
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                    times within 
-                  </span>
+                  <span className="text-[9px] text-zinc-600 font-bold uppercase">times within</span>
                   <input
                     type="number"
                     value={thresholdWindow}
@@ -842,107 +698,89 @@ const FieldPickerModal = () => {
             </div>
           </div>
         </div>
-  
-        {/* JOIN IDENTIFIER & CORRELATION */}
+
+        {/* ── JOIN BAR + CORRELATED CONDITION ── */}
         {logicGroups.length > 1 && (
           <>
+            {/* Join / Window Bar */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4">
-  <div className="flex items-center gap-4">
-    {/* Left Section - Join Identifier */}
-    <div className="flex items-center gap-3 flex-1">
-      <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-        Join Identifier
-      </span>
-      
-      <div className="flex items-center gap-2 bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
-        <div className="relative">
-          <input
-            type="text"
-            value={thresholdField}
-            onChange={e => setThresholdField(e.target.value)}
-            className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-blue-400 outline-none"
-          />
-          <button
-            onClick={() => {
-              setActiveFieldInput({
-                groupId: 'correlation-g1',
-                condId: 'join-key',
-                fieldType: 'field'
-              });
-              setSelectedDefaultField(null);
-              setShowFieldModal(true);
-            }}
-            className="absolute right-1 top-1 w-5 h-5 flex items-center justify-center rounded bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-500 hover:text-white"
-          >
-            <span className="text-[10px] font-bold">+</span>
-          </button>
-        </div>
+              <div className="flex items-center gap-4">
+                {/* Join Identifier */}
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">Join Identifier</span>
+                  <div className="flex items-center gap-2 bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={thresholdField}
+                        onChange={e => setThresholdField(e.target.value)}
+                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-blue-400 outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          setActiveFieldInput({ groupId: 'correlation-g1', condId: 'join-key', fieldType: 'field' });
+                          setSelectedDefaultField(null);
+                          setShowFieldModal(true);
+                        }}
+                        className="absolute right-1 top-1 w-5 h-5 flex items-center justify-center rounded bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-500 hover:text-white"
+                      >
+                        <span className="text-[10px] font-bold">+</span>
+                      </button>
+                    </div>
+                    <span className="text-zinc-700 font-bold text-sm">＝</span>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        defaultValue="destination.ip"
+                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-purple-400 outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          setActiveFieldInput({ groupId: 'correlation-g2', condId: 'join-key', fieldType: 'field' });
+                          setSelectedDefaultField(null);
+                          setShowFieldModal(true);
+                        }}
+                        className="absolute right-1 top-1 w-5 h-5 flex items-center justify-center rounded bg-zinc-800 hover:bg-purple-600 transition-colors text-zinc-500 hover:text-white"
+                      >
+                        <span className="text-[10px] font-bold">+</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-        <span className="text-zinc-700 font-bold text-sm">＝</span>
+                <div className="h-8 w-px bg-zinc-800 flex-shrink-0"></div>
 
-        <div className="relative">
-          <input
-            type="text"
-            defaultValue="destination.ip"
-            className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-purple-400 outline-none"
-          />
-          <button
-            onClick={() => {
-              setActiveFieldInput({
-                groupId: 'correlation-g2',
-                condId: 'join-key',
-                fieldType: 'field'
-              });
-              setSelectedDefaultField(null);
-              setShowFieldModal(true);
-            }}
-            className="absolute right-1 top-1 w-5 h-5 flex items-center justify-center rounded bg-zinc-800 hover:bg-purple-600 transition-colors text-zinc-500 hover:text-white"
-          >
-            <span className="text-[10px] font-bold">+</span>
-          </button>
-        </div>
-      </div>
-    </div>
+                {/* Global Window */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">Global Window</span>
+                  <input
+                    type="text"
+                    defaultValue="5m"
+                    className="bg-zinc-950 border border-zinc-800 w-14 py-1.5 rounded-md text-[10px] text-center font-bold outline-none"
+                  />
+                </div>
 
-    {/* Divider */}
-    <div className="h-8 w-px bg-zinc-800 flex-shrink-0"></div>
+                <div className="h-8 w-px bg-zinc-800 flex-shrink-0"></div>
 
-    {/* Middle Section - Global Window */}
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-        Global Window
-      </span>
-      <input
-        type="text"
-        defaultValue="5m"
-        className="bg-zinc-950 border border-zinc-800 w-14 py-1.5 rounded-md text-[10px] text-center font-bold outline-none"
-      />
-    </div>
-
-    {/* Divider */}
-    <div className="h-8 w-px bg-zinc-800 flex-shrink-0"></div>
-
-    {/* Right Section - Wait Window */}
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <Clock size={12} className="text-zinc-400 flex-shrink-0" />
-      <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-        Wait Window
-      </span>
-      <select
-        defaultValue="2m"
-        className="bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1.5 text-[10px] font-bold text-blue-400 outline-none cursor-pointer"
-      >
-        <option value="30s">30s</option>
-        <option value="1m">1m</option>
-        <option value="2m">2m</option>
-        <option value="5m">5m</option>
-        <option value="10m">10m</option>
-      </select>
-    </div>
-  </div>
-</div>
+                {/* Wait Window */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Clock size={12} className="text-zinc-400 flex-shrink-0" />
+                  <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">Wait Window</span>
+                  <select
+                    defaultValue="2m"
+                    className="bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1.5 text-[10px] font-bold text-blue-400 outline-none cursor-pointer"
+                  >
+                    <option value="30s">30s</option>
+                    <option value="1m">1m</option>
+                    <option value="2m">2m</option>
+                    <option value="5m">5m</option>
+                    <option value="10m">10m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
   
-            {/* STAGE 2: Correlated Anomaly */}
+            {/* Correlated Detection Condition */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -952,7 +790,6 @@ const FieldPickerModal = () => {
                   <div>
                     <h2 className="text-base font-bold text-zinc-100">Correlated Detection Condition</h2>
                     <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">This condition must also be met to trigger the detection.</p> 
-                    {/* <p className="text-[10px] text-zinc-500 font-medium tracking-tight uppercase">Matching Pattern ({logicGroups[1]?.source.toUpperCase() || 'HTTP.LOG'})</p> */}
                   </div> 
                 </div>
                 <div className="flex items-center gap-3">
@@ -981,7 +818,7 @@ const FieldPickerModal = () => {
               </div>
   
               <div className="space-y-4">
-                {/* Parameters */}
+                {/* Condition Rows */}
                 <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-4">
                   {logicGroups[1]?.conditions.map((cond) => (
                     <div key={cond.id} className="flex items-center gap-3">
@@ -1040,35 +877,25 @@ const FieldPickerModal = () => {
                   </button>
                 </div>
   
-                {/* Anomaly Threshold */}
+                {/* Correlated Suspicion Threshold — same language as primary */}
                 <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Activity size={12} className="text-red-400" />
                     <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
-                      Time-Bucket Logic
-                    </span>
-                    <span className="text-[9px] text-zinc-600 uppercase">
-                      COUNT(*)
+                      When should this condition be considered suspicious?
                     </span>
                   </div>
-  
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                        Occ
-                      </span>
-                      <span className="text-xs text-zinc-500">&gt;</span>
+                      <span className="text-[9px] text-zinc-600 font-bold uppercase">Occurs more than</span>
                       <input
                         type="number"
                         defaultValue="5"
                         className="w-14 bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1 text-xs font-bold text-white outline-none"
                       />
                     </div>
-  
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                        Window
-                      </span>
+                      <span className="text-[9px] text-zinc-600 font-bold uppercase">times within</span>
                       <input
                         type="number"
                         defaultValue="1"
@@ -1089,388 +916,356 @@ const FieldPickerModal = () => {
           </>
         )}
   
-        {/* ADD GROUP BUTTON */}
+        {/* ── ADD CORRELATED CONDITION CTA ── */}
         {logicGroups.length === 1 && (
-          <div className="border-2 border-dashed border-zinc-800/50 rounded-xl p-8 flex items-center justify-center hover:border-red-500/30 transition-all group cursor-pointer" onClick={addLogicGroup}>
+          <div className="border-2 border-dashed border-zinc-800/50 rounded-xl p-8 flex flex-col items-center justify-center hover:border-red-500/30 transition-all group cursor-pointer" onClick={addLogicGroup}>
             <span className="text-xs font-bold text-zinc-600 group-hover:text-red-500 transition-colors uppercase tracking-widest">
-              ＋ Add Correlated Condition 
+              ＋ Add Correlated Condition
+            </span>
+            <span className="text-[9px] text-zinc-700 mt-1.5 group-hover:text-zinc-500 transition-colors">
+              Require additional activity before raising an alert.
             </span>
           </div>
         )}
       </section>
   
-      {/* STAGE 3: Signal Tuning */}
+      {/* ── SIGNAL TUNING ── */}
       <section className="space-y-4 pb-20">
-  <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 text-sm font-bold">03</div>
-    <div>
-      <h2 className="text-sm font-bold text-zinc-100">Signal Tuning</h2>
-      <p className="text-[10px] text-zinc-500 font-medium">Manage alert fatigue and suppression.</p>
-    </div>
-  </div>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 text-sm font-bold">03</div>
+          <div>
+            <h2 className="text-sm font-bold text-zinc-100">Signal Tuning</h2>
+            <p className="text-[10px] text-zinc-500 font-medium">Manage alert fatigue and suppression.</p>
+          </div>
+        </div>
 
-  <div className="grid grid-cols-2 gap-3">
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-3">
-      <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest block">Suppression & Limits</span>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded-lg border border-zinc-800">
-          <span className="text-[10px] text-zinc-500 font-bold uppercase">Mute Window</span>
-          <input 
-            type="text" 
-            defaultValue="1h"
-            className="bg-zinc-900 border border-zinc-800 w-14 py-1 rounded text-center text-xs font-bold outline-none" 
-          />
+        <div className="grid grid-cols-2 gap-3">
+          {/* Suppression & Limits */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-3">
+            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest block">Suppression & Limits</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded-lg border border-zinc-800">
+                <span className="text-[10px] text-zinc-500 font-bold uppercase">Mute Window</span>
+                <input 
+                  type="text" 
+                  defaultValue="1h"
+                  className="bg-zinc-900 border border-zinc-800 w-14 py-1 rounded text-center text-xs font-bold outline-none" 
+                />
+              </div>
+              <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded-lg border border-zinc-800">
+                <span className="text-[10px] text-zinc-500 font-bold uppercase">Suppression Limit</span>
+                <input 
+                  type="number" 
+                  defaultValue="50"
+                  className="bg-zinc-900 border border-zinc-800 w-14 py-1 rounded text-center text-xs font-bold outline-none" 
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Deduplication Keys */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-3">
+            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest block">Deduplication Keys</span>
+            <div className="relative">
+              <input 
+                type="text" 
+                placeholder="Select key..."
+                readOnly
+                className="bg-zinc-950 border border-zinc-800 w-full pl-3 pr-9 py-2 rounded-lg text-xs font-mono text-zinc-500 outline-none cursor-pointer" 
+              />
+              <button
+                onClick={() => {
+                  setActiveFieldInput({ groupId: 'dedup', condId: 'key', fieldType: 'field' });
+                  setModalTab('default');
+                  setShowFieldModal(true);
+                }}
+                className="absolute right-1.5 top-1.5 w-6 h-6 flex items-center justify-center rounded bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
+              >
+                <span className="text-[10px] font-bold">+</span>
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
+                <span className="text-blue-400 font-bold">source.ip</span>
+                <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
+              </div>
+              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
+                <span className="text-blue-400 font-bold">rule_id</span>
+                <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded-lg border border-zinc-800">
-          <span className="text-[10px] text-zinc-500 font-bold uppercase">Suppression Limit</span>
-          <input 
-            type="number" 
-            defaultValue="50"
-            className="bg-zinc-900 border border-zinc-800 w-14 py-1 rounded text-center text-xs font-bold outline-none" 
-          />
-        </div>
-      </div>
-    </div>
-    
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-3">
-      <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest block">Deduplication Keys</span>
-      <div className="relative">
-        <input 
-          type="text" 
-          placeholder="Select key..."
-          readOnly
-          className="bg-zinc-950 border border-zinc-800 w-full pl-3 pr-9 py-2 rounded-lg text-xs font-mono text-zinc-500 outline-none cursor-pointer" 
-        />
-        <button
-          onClick={() => {
-            setActiveFieldInput({ groupId: 'dedup', condId: 'key', fieldType: 'field' });
-            setModalTab('default');
-            setShowFieldModal(true);
-          }}
-          className="absolute right-1.5 top-1.5 w-6 h-6 flex items-center justify-center rounded bg-zinc-800 hover:bg-blue-600 transition-colors text-zinc-400 hover:text-white"
-        >
-          <span className="text-[10px] font-bold">+</span>
-        </button>
-      </div>
-      <div className="flex flex-wrap gap-1.5">
-        <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
-          <span className="text-blue-400 font-bold">source.ip</span>
-          <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
-        </div>
-        <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
-          <span className="text-blue-400 font-bold">rule_id</span>
-          <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
     </div>
   );
 
-  // Keep all other render functions (renderStep3Review, renderStepHeader, renderBuilder, renderLibrary, renderAnalytics) as they were...
-  
-  // [Rest of the code remains the same...]
+  // ─── STEP 3: REVIEW ────────────────────────────────────────────────
+  // Phase-1 only: Rule Identity | Trigger Summary | Execution Context | Noise Controls | Deploy Action
+  const renderStep3Review = () => {
+    // Build the plain-English trigger sentence from live state
+    const sourceLabel = logicGroups[0]?.source === 'Network Data' ? 'network traffic'
+      : logicGroups[0]?.source === 'Endpoint Logs' ? 'endpoint activity'
+      : 'authentication events';
 
-  // Replace the existing renderStep3Review function with this:
+    const conditionParts = logicGroups[0]?.conditions
+      .filter(c => c.field && c.value)
+      .map(c => {
+        const opWord = c.operator === 'is' ? 'equals' : c.operator === '!=' ? 'does not equal' : 'is in';
+        return `${c.field} ${opWord} ${c.value}`;
+      }) || [];
 
-const renderStep3Review = () => (
-  <div className="max-w-5xl mx-auto animate-in fade-in duration-300">
-    {/* Header */}
-    <div className="mb-8 text-center">
-      <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">
-        Review & Deploy
-      </h2>
-      <p className="text-xs text-zinc-500 font-medium">
-        Verify your detection rule configuration before deployment
-      </p>
-    </div>
+    const triggerSentence = conditionParts.length > 0
+      ? `This rule triggers when ${sourceLabel} where ${conditionParts.join(' and ')} is observed more than ${thresholdHits} time${thresholdHits !== 1 ? 's' : ''} within ${thresholdWindow} ${thresholdUnit.toLowerCase()}.`
+      : `This rule triggers when ${sourceLabel} is observed more than ${thresholdHits} time${thresholdHits !== 1 ? 's' : ''} within ${thresholdWindow} ${thresholdUnit.toLowerCase()}.`;
 
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Left Column - Rule Identity & Execution */}
-      <div className="space-y-6">
-        {/* Rule Identity */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-            <div className="p-2 bg-blue-500/10 rounded-lg">
-              <FileText size={18} className="text-blue-400" />
-            </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-wide">
-              Rule Identity
-            </h3>
-          </div>
+    const hasCorrelation = logicGroups.length > 1;
+    const correlationParts = hasCorrelation
+      ? logicGroups[1]?.conditions.filter(c => c.field && c.value).map(c => {
+          const opWord = c.operator === 'is' ? 'equals' : c.operator === '!=' ? 'does not equal' : 'is in';
+          return `${c.field} ${opWord} ${c.value}`;
+        }) || []
+      : [];
 
-          <div className="space-y-3">
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Rule Name
-              </p>
-              <p className="text-sm font-bold text-white">
-                {ruleName || 'Untitled Rule'}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Severity
-              </p>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  severity === 'critical' ? 'bg-red-500' :
-                  severity === 'high' ? 'bg-orange-500' :
-                  severity === 'medium' ? 'bg-blue-500' : 'bg-zinc-500'
-                }`} />
-                <p className="text-sm font-bold text-white capitalize">
-                  {severity}
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Status
-              </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-950 border border-zinc-800 rounded-md">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                <p className="text-xs font-bold text-zinc-400 uppercase">
-                  Draft
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Risk Score
-              </p>
-              <p className="text-sm font-bold text-blue-400">
-                {riskScore} / 100
-              </p>
-            </div>
-          </div>
+    return (
+      <div className="max-w-4xl mx-auto animate-in fade-in duration-300">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">Review & Deploy</h2>
+          <p className="text-xs text-zinc-500 font-medium">Verify your detection rule configuration before deployment</p>
         </div>
 
-        {/* Execution Context */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-            <div className="p-2 bg-emerald-500/10 rounded-lg">
-              <Clock size={18} className="text-emerald-400" />
+        <div className="space-y-5">
+
+          {/* 1. RULE IDENTITY */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 mb-4">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <FileText size={18} className="text-blue-400" />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Rule Identity</h3>
             </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-wide">
-              Execution Context
-            </h3>
+
+            <div className="grid grid-cols-3 gap-6">
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Rule Name</p>
+                <p className="text-sm font-bold text-white">{ruleName || 'Untitled Rule'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Severity</p>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    severity === 'critical' ? 'bg-red-500' :
+                    severity === 'high' ? 'bg-orange-500' :
+                    severity === 'medium' ? 'bg-blue-500' : 'bg-zinc-500'
+                  }`} />
+                  <p className="text-sm font-bold text-white capitalize">{severity}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Status</p>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-950 border border-zinc-800 rounded-md">
+                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+                  <p className="text-xs font-bold text-zinc-400 uppercase">Draft</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Execution
-              </p>
-              <p className="text-sm font-bold text-white capitalize">
-                {frequency}
-              </p>
+          {/* 2. TRIGGER SUMMARY — the most important section */}
+          <div className="bg-zinc-900 border border-emerald-500/25 rounded-xl p-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 mb-4">
+              <div className="p-2 bg-emerald-500/10 rounded-lg">
+                <Zap size={18} className="text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Trigger Summary</h3>
             </div>
 
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Data Source
-              </p>
-              <p className="text-sm font-bold text-white">
-                Network telemetry ({logicGroups[0]?.source || 'Zeek'})
-              </p>
-            </div>
+            {/* Primary trigger sentence */}
+            <p className="text-sm text-zinc-300 leading-relaxed">
+              {triggerSentence}
+            </p>
 
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Lookback Window
-              </p>
-              <p className="text-sm font-bold text-white">
-                Last {lookback} {lookback === 1 ? 'minute' : 'minutes'}
-              </p>
-            </div>
-
-            {frequency === 'scheduled' && (
-              <div>
-                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                  Schedule
-                </p>
-                <p className="text-sm font-bold text-white">
-                  Every {repeatValue} {repeatUnit.toLowerCase()}
+            {/* Correlation sentence — only if a second group exists */}
+            {hasCorrelation && correlationParts.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-zinc-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles size={13} className="text-red-400" />
+                  <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Correlated with</span>
+                </div>
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  Additionally, {logicGroups[1]?.source === 'Endpoint Logs' ? 'endpoint activity' : logicGroups[1]?.source === 'Network Data' ? 'network traffic' : 'authentication events'} where {correlationParts.join(' and ')} must also be observed within the correlation window to raise the alert.
                 </p>
               </div>
             )}
-          </div>
-        </div>
-      </div>
 
-      {/* Middle Column - Detection Logic Summary */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Detection Logic */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-6">
-          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-            <div className="p-2 bg-purple-500/10 rounded-lg">
-              <Zap size={18} className="text-purple-400" />
-            </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-wide">
-              Detection Logic
-            </h3>
-          </div>
+            {/* ── Visual logic breakdown (scannable confirmation) ── */}
+            <div className="mt-6 space-y-3">
 
-          {/* Stage 1 */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
-                <span className="text-blue-400 font-black text-xs">1</span>
-              </div>
-              <span className="text-xs font-bold text-white uppercase">Primary Condition</span>
-            </div>
-
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
-                <span className="text-xs font-mono text-blue-400">{logicGroups[0]?.source}</span>
-              </div>
-              
-              {logicGroups[0]?.conditions.map((cond, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs font-mono">
-                  <span className="text-emerald-400">{cond.field}</span>
-                  <span className="text-zinc-600">{cond.operator}</span>
-                  <span className="text-pink-400">{cond.value}</span>
-                </div>
-              ))}
-
-              <div className="pt-2 mt-2 border-t border-zinc-800">
-                <div className="text-[10px] text-zinc-500">
-                  <span className="font-bold">Threshold:</span> More than {thresholdHits} times within {thresholdWindow} {thresholdUnit.toLowerCase()}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stage 2 - Correlation */}
-          {logicGroups.length > 1 && (
-            <>
-              <div className="flex items-center justify-center">
-                <div className="px-4 py-1.5 bg-zinc-950 border border-emerald-500/50 rounded-full">
-                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">
-                    Correlated Within 5m
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
+              {/* Primary Condition card */}
+              <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center">
-                    <span className="text-red-400 font-black text-xs">2</span>
+                  <div className="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
+                    <span className="text-blue-400 font-black text-xs">1</span>
                   </div>
-                  <span className="text-xs font-bold text-white uppercase">Correlated Condition</span>
+                  <span className="text-xs font-bold text-white uppercase">Primary Condition</span>
                 </div>
 
                 <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
-                    <span className="text-xs font-mono text-red-400">{logicGroups[1]?.source}</span>
+                    <span className="text-xs font-mono text-blue-400">{logicGroups[0]?.source}</span>
                   </div>
                   
-                  {logicGroups[1]?.conditions.map((cond, idx) => (
+                  {logicGroups[0]?.conditions.map((cond, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs font-mono">
                       <span className="text-emerald-400">{cond.field}</span>
                       <span className="text-zinc-600">{cond.operator}</span>
                       <span className="text-pink-400">{cond.value}</span>
                     </div>
                   ))}
+
+                  <div className="pt-2 mt-2 border-t border-zinc-800">
+                    <div className="text-[10px] text-zinc-500">
+                      <span className="font-bold">Threshold:</span> More than {thresholdHits} times within {thresholdWindow} {thresholdUnit.toLowerCase()}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
 
-        {/* MITRE Mapping */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-            <div className="p-2 bg-orange-500/10 rounded-lg">
-              <Shield size={18} className="text-orange-400" />
+              {/* Correlation pill + Correlated Condition card */}
+              {hasCorrelation && (
+                <>
+                  <div className="flex items-center justify-center">
+                    <div className="px-4 py-1.5 bg-zinc-950 border border-emerald-500/50 rounded-full">
+                      <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                        Correlated Within 5m
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center">
+                        <span className="text-red-400 font-black text-xs">2</span>
+                      </div>
+                      <span className="text-xs font-bold text-white uppercase">Correlated Condition</span>
+                    </div>
+
+                    <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
+                        <span className="text-xs font-mono text-red-400">{logicGroups[1]?.source}</span>
+                      </div>
+                      
+                      {logicGroups[1]?.conditions.map((cond, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-xs font-mono">
+                          <span className="text-emerald-400">{cond.field}</span>
+                          <span className="text-zinc-600">{cond.operator}</span>
+                          <span className="text-pink-400">{cond.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-wide">
-              MITRE ATT&CK Mapping
-            </h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Tactic
-              </p>
-              <p className="text-sm font-bold text-white">
-                {tactic}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">
-                Technique
-              </p>
-              <p className="text-sm font-mono font-bold text-orange-400">
-                {techniqueId}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Description */}
-        {description && (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-              <div className="p-2 bg-zinc-700/30 rounded-lg">
-                <MessageSquare size={18} className="text-zinc-400" />
+          {/* 3. EXECUTION CONTEXT */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 mb-4">
+              <div className="p-2 bg-[#006bb410] rounded-lg">
+                <Clock size={18} className="text-[#006bb4]" />
               </div>
-              <h3 className="text-sm font-black text-white uppercase tracking-wide">
-                Description
-              </h3>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Execution Context</h3>
             </div>
 
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {description}
+            <div className="grid grid-cols-3 gap-6">
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Execution Mode</p>
+                <p className="text-sm font-bold text-white capitalize">{frequency === 'realtime' ? 'Real-time' : 'Scheduled'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Data Source</p>
+                <p className="text-sm font-bold text-white">
+                  {logicGroups[0]?.source === 'Network Data' ? 'Network telemetry (Zeek)' : logicGroups[0]?.source === 'Endpoint Logs' ? 'Endpoint telemetry' : 'Auth service logs'}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Lookback Window</p>
+                <p className="text-sm font-bold text-white">Last {lookback} {lookback === 1 ? 'minute' : 'minutes'}</p>
+              </div>
+              {frequency === 'scheduled' && (
+                <div>
+                  <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1.5">Evaluation Interval</p>
+                  <p className="text-sm font-bold text-white">Every {repeatValue} {repeatUnit.toLowerCase()}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 4. NOISE CONTROLS */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 mb-4">
+              <div className="p-2 bg-orange-500/10 rounded-lg">
+                <Sliders size={18} className="text-orange-400" />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Noise Controls</h3>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">Deduplication</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px] font-mono text-blue-400 font-bold">source.ip</span>
+                  <span className="text-[10px] text-zinc-700 font-bold self-center">+</span>
+                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px] font-mono text-blue-400 font-bold">rule.id</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">Mute Window</p>
+                <p className="text-sm font-bold text-white">1 hour</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. DEPLOY ACTION */}
+          <div className="bg-gradient-to-br from-emerald-900/20 to-blue-900/20 border border-emerald-500/30 rounded-xl p-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-emerald-500/20 mb-4">
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <Send size={18} className="text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Deploy Action</h3>
+            </div>
+
+            <p className="text-xs text-zinc-400 mb-5">
+              You can edit this rule later if adjustments are needed.
             </p>
-          </div>
-        )}
 
-        {/* Deploy Actions */}
-        <div className="bg-gradient-to-br from-emerald-900/20 to-blue-900/20 border border-emerald-500/30 rounded-xl p-6 space-y-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-emerald-500/20">
-            <div className="p-2 bg-emerald-500/20 rounded-lg">
-              <Zap size={18} className="text-emerald-400" fill="currentColor" />
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setCurrentStep(2)}
+                className="flex-1 px-6 py-3 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+              >
+                <ArrowRight size={16} className="rotate-180" />
+                Back to Logic
+              </button>
+              <button 
+                onClick={() => setActiveTab('library')}
+                className="flex-1 px-6 py-3 bg-emerald-600 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20"
+              >
+                <Send size={16} />
+                Deploy Rule
+              </button>
             </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-wide">
-              Deploy Action
-            </h3>
-          </div>
-
-          <p className="text-xs text-zinc-400">
-            Ready to deploy this detection rule to your SOC environment. The rule will start monitoring for suspicious activity based on your configured logic.
-          </p>
-
-          <div className="flex gap-3 pt-2">
-            <button 
-              onClick={() => setCurrentStep(2)}
-              className="flex-1 px-6 py-3 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
-            >
-              <ArrowRight size={16} className="rotate-180" />
-              Back to Logic
-            </button>
-            <button 
-              onClick={() => setActiveTab('library')}
-              className="flex-1 px-6 py-3 bg-emerald-600 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20"
-            >
-              <Send size={16} />
-              Deploy Rule
-            </button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  };
 
+  // ─── STEP HEADER ───────────────────────────────────────────────────
   const renderStepHeader = () => (
     <div className="flex items-center justify-center gap-16 mb-10 relative">
        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[1px] w-[300px] bg-zinc-800 -z-10" />
@@ -1489,6 +1284,7 @@ const renderStep3Review = () => (
     </div>
   );
 
+  // ─── BUILDER SHELL ─────────────────────────────────────────────────
   const renderBuilder = () => (
     <div className="animate-in fade-in duration-500">
       <div className="flex items-center justify-between mb-10">
@@ -1499,7 +1295,13 @@ const renderStep3Review = () => (
                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em] mt-1">Define how suspicious behavior is identified in real time</p>
             </div>
          </div>
-         <div className="flex items-center gap-8"><div className="text-right"><p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Version</p><p className="text-[11px] font-mono font-bold text-zinc-500">v4.2.0-PRD</p></div><button onClick={() => setActiveTab('library')} className="p-2 text-zinc-700 hover:text-white"><X size={24}/></button></div>
+         <div className="flex items-center gap-8">
+            <div className="text-right">
+               <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Version</p>
+               <p className="text-[11px] font-mono font-bold text-zinc-500">v4.2.0-PRD</p>
+            </div>
+            <button onClick={() => setActiveTab('library')} className="p-2 text-zinc-700 hover:text-white"><X size={24}/></button>
+         </div>
       </div>
       {renderStepHeader()}
       <main className="min-h-[500px]">
@@ -1521,6 +1323,7 @@ const renderStep3Review = () => (
     </div>
   );
 
+  // ─── LIBRARY TAB ───────────────────────────────────────────────────
   const renderLibrary = () => {
     const filteredRules = MOCK_RULES.filter(r => 
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -1612,6 +1415,7 @@ const renderStep3Review = () => (
     );
   };
 
+  // ─── ANALYTICS TAB ─────────────────────────────────────────────────
   const renderAnalytics = () => (
     <div className="animate-in fade-in duration-500 space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1687,7 +1491,6 @@ const renderStep3Review = () => (
            </div>
 
            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 space-y-6 shadow-xl relative overflow-hidden group">
-              {/* <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Brain size={100} className="text-[#00D4AA]" /></div> */}
               <h3 className="text-[10px] font-black text-[#00D4AA] uppercase tracking-widest flex items-center gap-2"><Brain size={14}/> Engine Insights</h3>
               <div className="space-y-4 relative z-10">
                  <p className="text-xs text-zinc-400 leading-relaxed"><span className="text-white font-bold uppercase tracking-tight">Efficacy:</span> Baseline tuning has reduced overall False Positives by <span className="text-emerald-500 font-black">1.3%</span> this month.</p>
@@ -1700,6 +1503,7 @@ const renderStep3Review = () => (
     </div>
   );
 
+  // ─── PAGE ROOT ─────────────────────────────────────────────────────
   return (
     <div className="max-w-[1300px] mx-auto pb-48 px-6">
       <div className="flex items-center justify-between mb-8 border-b border-zinc-800 pb-8">
@@ -1713,12 +1517,6 @@ const renderStep3Review = () => (
             </div>
           </div>
         </div>
-        
-        {/* <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 p-1.5 rounded-lg shadow-xl">
-           <button onClick={() => { setActiveTab('library'); setCurrentStep(1); }} className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'library' ? 'bg-[#00D4AA] text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}><Settings2 size={14} className="inline mr-2" /> Library</button>
-           <button onClick={() => setActiveTab('builder')} className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'builder' ? 'bg-[#00D4AA] text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}><Plus size={14} className="inline mr-2" /> Builder</button>
-           <button onClick={() => { setActiveTab('analytics'); setCurrentStep(1); }} className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'analytics' ? 'bg-[#00D4AA] text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}><BarChart2 size={14} className="inline mr-2" /> Analytics</button>
-        </div> */}
 
         {activeTab === 'builder' && (
           <div className="flex gap-2">

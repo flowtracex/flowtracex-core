@@ -214,9 +214,9 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
       </div>
 
       {/* Footer note */}
-      <p className="text-xs text-zinc-500 italic">
+      {/* <p className="text-xs text-zinc-500 italic">
         The activity was observed consistently over a defined time window and was not a single transient spike.
-      </p>
+      </p> */}
     </div>
   </div>
 </div>

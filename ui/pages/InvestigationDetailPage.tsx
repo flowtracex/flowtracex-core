@@ -112,220 +112,214 @@ const InvestigationDetailPage: React.FC<Props> = ({ id, onBack }) => {
       {/* Tab Content */}
       <div className="animate-in fade-in duration-300">
         {activeTab === 'overview' && (
-          <div className="space-y-6">
+          <div className="min-h-screen ">
+      <div className="max-w-7xl mx-auto space-y-4">
+        
+        {/* Case Header Card - Compact */}
+        <div className="bg-[#0f0f10] border border-[#1e1e20] border-l-4 border-l-red-500 rounded-xl p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="px-2.5 py-0.5 bg-red-600/20 border border-red-600/30 text-red-400 text-xs font-black uppercase rounded">
+              Critical - P1
+            </span>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">Persistent DNS Tunneling & SMB Lateral Movement</h2>
+          </div>
+          
+          <div className="grid grid-cols-4 gap-4 text-sm">
+            <div>
+              <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-0.5">Lead Analyst</div>
+              <div className="text-white font-bold">Alex Rivera</div>
+            </div>
+            <div>
+              <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-0.5">Time Open</div>
+              <div className="text-white font-bold">2 hours ago</div>
+            </div>
+            <div>
+              <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-0.5">Primary Entity</div>
+              <div className="text-white font-bold">MGMT-CHQ-K02 (10.0.2.88)</div>
+            </div>
+            <div>
+              <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-0.5">Connected Alerts</div>
+              <div className="text-white font-bold">3 Records</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          
+          {/* Left Column */}
+          <div className="space-y-4">
             
-            {/* Case Header Card */}
-            <div className="bg-[#0c0c0e]  border-l-4 border-red-500 rounded-lg p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 bg-red-600/20 border border-red-600/30 text-red-400 text-xs font-black uppercase rounded">
-                      Critical - P1
-                    </span>
-                    <h2 className="text-xl font-black text-white">Persistent DNS Tunneling & SMB Lateral Movement</h2>
+            {/* Case Origin */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <Target size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Case Origin</h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1.5">Created From</div>
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle size={14} className="text-[#00D4AA]" />
+                    <span className="text-sm text-white font-bold">Signal: DNS Tunneling Detected</span>
                   </div>
-                  
-                  <div className="grid grid-cols-4 gap-6 text-sm">
-                    <div>
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Lead Analyst</div>
-                      <div className="text-white font-bold">Alex Rivera</div>
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Time Open</div>
-                      <div className="text-white font-bold">2 hours ago</div>
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Primary Entity</div>
-                      <div className="text-emerald-400 font-mono font-bold">MGMT-CHQ-K02 (10.0.2.88)</div>
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Connected Alerts</div>
-                      <div className="text-white font-bold">3 Records</div>
-                    </div>
-                  </div>
+                </div>
+                <div className="bg-cyan-900/10 border border-cyan-600/30 rounded-lg p-3">
+                  <p className="text-sm text-cyan-100 italic leading-relaxed">
+                    "Auto-escalated due to related SMB lateral movement"
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              {/* Left Column */}
-              <div className="space-y-6">
-                
-                {/* Case Origin */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Target size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Case Origin</h3>
-                    </div>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div>
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Created From</div>
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle size={14} className="text-emerald-400" />
-                        <span className="text-sm text-white font-bold">Signal: DNS Tunneling Detected</span>
-                      </div>
-                    </div>
-                    <div className="bg-emerald-900/10 border border-emerald-900/20 rounded-lg p-4">
-                      <p className="text-sm text-emerald-100  leading-relaxed">
-                        "Auto-escalated due to related SMB lateral movement"
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Executive Summary */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <FileText size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Executive Summary</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                  <ul className="text-sm text-zinc-300 leading-relaxed space-y-2 list-disc list-inside">
-  <li>Investigation into a series of high-entropy DNS queries</li>
-  <li>Unauthorized SMB enumeration from the management workstation</li>
-  <li>Patterns suggest data exfiltration attempt</li>
-  <li>Following local credential compromise</li>
-</ul>
-                  </div>
-                </div>
-
-                {/* Recent Activity */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-amber-400">
-                      <Clock size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Recent Activity</h3>
-                    </div>
-                  </div>
-                  <div className="p-6 space-y-3">
-                    {[
-                      { time: '18:05:12', text: 'Evidence item EV-01 (dns.log) attached to case' },
-                      { time: '17:40:03', text: 'Isolated host MGMT-CHQ-K02 from Guest VLAN' },
-                      { time: '17:12:18', text: 'Related Use Case UC-1021-SMB associated with this case' },
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex items-start gap-3 text-xs">
-                        <span className="text-zinc-600 font-mono min-w-[4.5rem]">{item.time}</span>
-                        <span className="text-zinc-400">{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
+            {/* Executive Summary */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <FileText size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Executive Summary</h3>
                 </div>
               </div>
+              <div className="p-4">
+                <ul className="text-sm text-zinc-300 leading-relaxed space-y-1.5 list-disc list-inside">
+                  <li>Investigation into a series of high-entropy DNS queries</li>
+                  <li>Unauthorized SMB enumeration from the management workstation</li>
+                  <li>Patterns suggest data exfiltration attempt</li>
+                  <li>Following local credential compromise</li>
+                </ul>
+              </div>
+            </div>
 
-              {/* Right Column */}
-              <div className="space-y-6">
-                
-                {/* Affected Scope */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Target size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Affected Scope</h3>
-                    </div>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <Server size={14} />
-                        <span className="text-xs uppercase font-bold">Affected Host(s)</span>
-                      </div>
-                      <span className="text-white font-bold">1</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <Users size={14} />
-                        <span className="text-xs uppercase font-bold">Internal Systems Involved</span>
-                      </div>
-                      <span className="text-white font-bold">3</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <Globe size={14} />
-                        <span className="text-xs uppercase font-bold">External Destinations</span>
-                      </div>
-                      <span className="text-white font-bold">1</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <Clock size={14} />
-                        <span className="text-xs uppercase font-bold">Observed Time Window</span>
-                      </div>
-                      <span className="text-white font-bold">22 minutes</span>
-                    </div>
-                  </div>
+            {/* Recent Activity */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-amber-400">
+                  <Clock size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Recent Activity</h3>
                 </div>
-
-                {/* Current Assessment */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <ShieldCheck size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Current Assessment</h3>
-                    </div>
+              </div>
+              <div className="p-4 space-y-2">
+                {[
+                  { time: '18:05:12', text: 'Evidence item EV-01 (dns.log) attached to case' },
+                  { time: '17:40:03', text: 'Isolated host MGMT-CHQ-K02 from Guest VLAN' },
+                  { time: '17:12:18', text: 'Related Use Case UC-1021-SMB associated with this case' },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-3 text-xs">
+                    <span className="text-zinc-600 font-mono min-w-[4.5rem]">{item.time}</span>
+                    <span className="text-zinc-400">{item.text}</span>
                   </div>
-                  <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-6">
-  <div className="flex flex-col gap-1">
-    <span className="text-xs text-zinc-500 font-bold uppercase">Status</span>
-    <span className="text-sm text-amber-400 font-bold">Under Investigation</span>
-  </div>
-  <div className="h-[30px] w-[1px] bg-gray-400"></div>
-  
-  
-  
-  <div className="flex flex-col gap-1">
-    <span className="text-xs text-amber-400 font-bold uppercase">Verdict</span>
-    <span className="text-sm text-red-400 font-bold">Likely Malicious</span>
-  </div>
-  <div className="h-[30px] w-[1px] bg-gray-400"></div>
-  
-  
-  
-  <div className="flex flex-col gap-1">
-    <span className="text-xs text-emerald-400 font-bold uppercase">Confidence</span>
-    <span className="text-sm text-emerald-400 font-bold">High</span>
-  </div>
-</div>
-
-                    <div className="pt-4 border-t border-emerald-900/20">
-                      <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Analyst Stance</div>
-                      <p className="text-xs text-emerald-400 ">
-                        Initial indicators strongly support an active exfiltration attempt. Containment protocol is currently active.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recommended Actions */}
-                <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                  <div className="px-6 py-4 border-b border-emerald-900/20">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Zap size={14} />
-                      <h3 className="text-[10px] font-black uppercase tracking-widest">Recommended Actions</h3>
-                    </div>
-                  </div>
-                  <div className="p-6 space-y-3">
-                    {[
-                      'Validate DNS destination ownership (not unknown-host.nl)',
-                      'Review SMB access logs on MGMT-CHQ-K02',
-                    ].map((action, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <div className="mt-0.5 w-5 h-5 rounded bg-cyan-900/30 border border-cyan-600/40 flex items-center justify-center flex-shrink-0">
-                          <span className="text-[10px] text-emerald-400 font-black">{idx + 1}</span>
-                        </div>
-                        <p className="text-xs text-zinc-400 leading-relaxed">{action}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
+
+          {/* Right Column */}
+          <div className="space-y-4">
+            
+            {/* Affected Scope */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <Target size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Affected Scope</h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Server size={14} />
+                    <span className="text-xs uppercase font-bold">Affected Host(s)</span>
+                  </div>
+                  <span className="text-white font-bold">1</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Users size={14} />
+                    <span className="text-xs uppercase font-bold">Internal Systems Involved</span>
+                  </div>
+                  <span className="text-white font-bold">3</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Globe size={14} />
+                    <span className="text-xs uppercase font-bold">External Destinations</span>
+                  </div>
+                  <span className="text-white font-bold">1</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Clock size={14} />
+                    <span className="text-xs uppercase font-bold">Observed Time Window</span>
+                  </div>
+                  <span className="text-white font-bold">22 minutes</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Current Assessment */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <ShieldCheck size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Current Assessment</h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs text-zinc-500 font-bold uppercase">Status</span>
+                    <span className="text-sm text-amber-400 font-bold">Under Investigation</span>
+                  </div>
+                  <div className="h-[30px] w-[1px] bg-zinc-700"></div>
+                  
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs text-zinc-500 font-bold uppercase">Verdict</span>
+                    <span className="text-sm text-red-400 font-bold">Likely Malicious</span>
+                  </div>
+                  <div className="h-[30px] w-[1px] bg-zinc-700"></div>
+                  
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs text-zinc-500 font-bold uppercase">Confidence</span>
+                    <span className="text-sm text-emerald-400 font-bold">High</span>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#1e1e20]">
+                  <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1.5">Analyst Stance</div>
+                  <p className="text-xs text-zinc-400">
+                    Initial indicators strongly support an active exfiltration attempt. Containment protocol is currently active.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Recommended Actions */}
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <Zap size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Recommended Actions</h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-2.5">
+                {[
+                  'Validate DNS destination ownership (not unknown-host.nl)',
+                  'Review SMB access logs on MGMT-CHQ-K02',
+                ].map((action, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="mt-0.5 w-5 h-5 rounded bg-cyan-900/30 border border-cyan-600/40 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[10px] text-[#00D4AA] font-black">{idx + 1}</span>
+                    </div>
+                    <p className="text-xs text-zinc-400 leading-relaxed">{action}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
         )}
 
         {activeTab === 'alerts' && (
@@ -412,7 +406,7 @@ const InvestigationDetailPage: React.FC<Props> = ({ id, onBack }) => {
 
         {activeTab === 'timeline' && (
           <div className="space-y-6">
-            <div className="relative pl-12 space-y-8 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[2px] before:bg-zinc-800">
+            <div className="relative pl-12 space-y-2 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[2px] before:bg-zinc-800">
               {[
                 { time: '16:08:42', label: 'SYSTEM', type: 'system', text: 'Case created via auto-escalation from Signal SIG-8821', color: 'blue' },
                 { time: '16:34:41', label: 'ANALYST', type: 'analyst', text: 'Analyst Alex Rivera assigned to investigation', color: 'purple' },
@@ -429,7 +423,7 @@ const InvestigationDetailPage: React.FC<Props> = ({ id, onBack }) => {
     <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
   </div>
   <div className="bg-[#0a0a0b] border border-zinc-800/50 rounded-lg p-3 hover:border-cyan-600/30 transition-all">
-    <div className="flex justify-between items-center gap-3 mb-2">
+    <div className="flex justify-between items-center gap-3 mb-1">
       <span className="text-[10px] font-mono text-zinc-500">{event.time}</span>
       <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded whitespace-nowrap ${
         event.color === 'blue' ? 'bg-blue-600/20 border border-blue-600/30 text-blue-400' :
@@ -448,82 +442,86 @@ const InvestigationDetailPage: React.FC<Props> = ({ id, onBack }) => {
         )}
 
         {activeTab === 'notes' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            {/* Left Column - Analyst Journal */}
-            <div className="space-y-6">
-              <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-emerald-900/20">
-                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Analyst Journal</h3>
-                </div>
-                <div className="p-6 space-y-4">
-                  {[
-                    { author: 'ALEX RIVERA', time: '5 hours ago', initial: 'A', text: '"Confirmed that the destination domain has no business justification. Entropy tests are consistent with tunneling."' },
-                    { author: 'SOC LEAD', time: '48 mins ago', initial: 'S', text: '"High priority. Check if any other hosts in the management subnet have contacted the same external IP."' },
-                  ].map((note, idx) => (
-                    <div key={idx} className="bg-[#0d0d0f] border border-zinc-800/50 rounded-lg p-4">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-black text-white">{note.initial}</span>
+          <div className="min-h-screen ">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          
+          {/* Left Column - Analyst Journal */}
+          <div className="space-y-4">
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Analyst Journal</h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {[
+                  { author: 'ALEX RIVERA', time: '5 hours ago', initial: 'A', text: '"Confirmed that the destination domain has no business justification. Entropy tests are consistent with tunneling."' },
+                  { author: 'SOC LEAD', time: '48 mins ago', initial: 'S', text: '"High priority. Check if any other hosts in the management subnet have contacted the same external IP."' },
+                ].map((note, idx) => (
+                  <div key={idx} className="bg-zinc-900/30 border border-[#1e1e20] rounded-lg p-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded bg-[#00D4AA] flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-black text-black">{note.initial}</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-black text-white uppercase">{note.author}</span>
+                          <span className="text-[10px] text-zinc-600">{note.time}</span>
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-black text-white uppercase">{note.author}</span>
-                            <span className="text-[10px] text-zinc-600">{note.time}</span>
-                          </div>
-                          <p className="text-xs text-zinc-400  leading-relaxed">{note.text}</p>
-                        </div>
+                        <p className="text-xs text-zinc-400 leading-relaxed">{note.text}</p>
                       </div>
                     </div>
-                  ))}
-
-                  <button className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-400 px-4 py-3 rounded-lg text-xs font-bold uppercase transition-all text-left">
-                    Add an observation or update analysis...
-                  </button>
-
-                  <button className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-500 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all">
-                    Add Entry
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Final Decision */}
-            <div className="space-y-6">
-              <div className="bg-[#0a0a0b] border border-emerald-900/30 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-emerald-900/20">
-                  <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle2 size={14} />
-                    <h3 className="text-[10px] font-black uppercase tracking-widest">Final Decision</h3>
                   </div>
-                </div>
-                <div className="p-6 space-y-4">
-                  <div>
-                    <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Select Verdict</div>
-                    <select className="w-full bg-[#0d0d0f] border border-zinc-800 text-white px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-emerald-600">
-                      <option>True Positive (Malicious)</option>
-                      <option>False Positive</option>
-                      <option>Benign True Positive</option>
-                      <option>Requires Escalation</option>
-                    </select>
-                  </div>
+                ))}
 
-                  <div>
-                    <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Resolution Justification...</div>
-                    <textarea 
-                      className="w-full bg-[#0d0d0f] border border-zinc-800 text-white px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-emerald-600 resize-none"
-                      rows={4}
-                      placeholder="Provide reasoning for the verdict..."
-                    ></textarea>
-                  </div>
+                <button className="w-full bg-zinc-900/50 hover:bg-zinc-900 border border-[#1e1e20] text-zinc-400 hover:text-zinc-300 px-4 py-2.5 rounded-lg text-xs font-bold uppercase transition-all text-left">
+                  Add an observation or update analysis...
+                </button>
 
-                  <button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-lg text-xs font-black uppercase tracking-widest transition-all">
-                    Submit Final Verdict
-                  </button>
-                </div>
+                <button className="w-full bg-[#00D4AA] hover:bg-[#00c399] text-black px-4 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all">
+                  Add Entry
+                </button>
               </div>
             </div>
           </div>
+
+          {/* Right Column - Final Decision */}
+          <div className="space-y-4">
+            <div className="bg-[#0f0f10] border border-[#1e1e20] rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-[#1e1e20]">
+                <div className="flex items-center gap-2 text-[#00D4AA]">
+                  <CheckCircle2 size={14} />
+                  <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Final Decision</h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1.5">Select Verdict</div>
+                  <select className="w-full bg-zinc-900/30 border border-[#1e1e20] text-white px-4 py-2.5 rounded-lg text-sm focus:outline-none focus:border-cyan-600/40 hover:border-cyan-600/40 transition-colors">
+                    <option>True Positive (Malicious)</option>
+                    <option>False Positive</option>
+                    <option>Benign True Positive</option>
+                    <option>Requires Escalation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1.5">Resolution Justification</div>
+                  <textarea 
+                    className="w-full bg-zinc-900/30 border border-[#1e1e20] text-white px-4 py-2.5 rounded-lg text-sm focus:outline-none focus:border-cyan-600/40 hover:border-cyan-600/40 transition-colors resize-none"
+                    rows={4}
+                    placeholder="Provide reasoning for the verdict..."
+                  ></textarea>
+                </div>
+
+                <button className="w-full bg-[#00D4AA] hover:bg-[#00c399] text-black px-6 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all">
+                  Submit Final Verdict
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
         )}
       </div>
     </div>
