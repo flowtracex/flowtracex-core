@@ -30,18 +30,18 @@ interface Props {
 }
 
 const RISK_DISTRIBUTION = [
-  { name: 'Critical', value: 12, color: '#e11d48' },
-  { name: 'High', value: 25, color: '#f59e0b' },
-  { name: 'Medium', value: 45, color: '#3b82f6' },
-  { name: 'Low', value: 18, color: '#10b981' },
+  { name: 'Critical', value: 12, color: '#ef4444' },
+  { name: 'High', value: 25, color: '#f97316' },
+  { name: 'Medium', value: 45, color: '#eab308' },
+  { name: 'Low', value: 18, color: '#3b82f6' },
 ];
 
 const TYPE_DISTRIBUTION = [
   { name: 'Workstations', value: 840, color: '#00D4AA' },
   { name: 'Servers', value: 210, color: '#3b82f6' },
-  { name: 'Databases', value: 45, color: '#8b5cf6' },
-  { name: 'Network', value: 32, color: '#f59e0b' },
-  { name: 'IoT/Other', value: 120, color: '#6b7280' },
+  { name: 'Databases', value: 45, color: '#6b7280' },
+  { name: 'Network', value: 32, color: '#f97316' },
+  { name: 'IoT/Other', value: 120, color: '#71717a' },
 ];
 
 const DISCOVERY_TIMELINE = Array.from({ length: 30 }, (_, i) => ({
@@ -95,7 +95,7 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         segment: segments[i % segments.length],
         os: osList[i % osList.length],
         services: i === 0 ? ['HTTP', 'SMB', 'LDAP', 'DNS'] : i === 1 ? ['SSH'] : ['RTSP', 'HTTP'],
-        logSources: i === 0 ? ['known_hosts.log', 'known_services.log'] : i === 1 ? ['dhcp.log', 'notice.log'] : ['known_hosts.log', 'conn.log'],
+        logSources: i === 0 ? ['known_hosts.log', 'known_services.log'] : i === 1 ?  ['dhcp.log', 'notice.log'] : ['known_hosts.log', 'conn.log'],
         lastActivity: i === 0 ? '2 mins ago' : i === 1 ? 'Just now' : '15 mins ago',
         vulnerabilities: { 
           critical: Math.floor(Math.random() * 5),
@@ -127,12 +127,12 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
       {/* Filter Bar */}
       <div className="flex items-center gap-3 flex-wrap">
         {/* Search Field */}
-        <div className="flex-1 min-w-[300px] relative group">
-          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-400 transition-colors" />
+        <div className="flex-1 min-w-[300px] relative">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 z-10 pointer-events-none" />
           <input 
             type="text" 
             placeholder="Search by IP, Hostname, or MAC..." 
-            className="w-full bg-[#0a0a0b] border border-zinc-800 rounded-lg pl-12 pr-4 py-2.5 text-sm text-white outline-none focus:border-zinc-700 transition-all placeholder:text-zinc-600"
+            className="w-full bg-zinc-900/60 backdrop-blur-md border border-white/10 rounded-lg pl-12 pr-6 py-3 text-sm text-zinc-200 outline-none focus:border-[#00D4AA] transition-all placeholder:text-zinc-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -141,17 +141,17 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         {/* Asset Type Dropdown */}
         <div className="relative dropdown-container">
           <div className="flex flex-col gap-1">
-            <label className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider px-1">Asset Type</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Asset Type</label>
             <button 
               onClick={() => setOpenDropdown(openDropdown === 'type' ? null : 'type')}
-              className="bg-[#0a0a0b] border border-zinc-800 hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 min-w-[140px]"
+              className="flex items-center gap-2 bg-[#0a0a0b] border border-[#1e1e20] hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all min-w-[140px]"
             >
               <span className="capitalize">{selectedAssetType === 'all' ? 'All Types' : selectedAssetType}</span>
               <ChevronDown size={14} className={`ml-auto transition-transform ${openDropdown === 'type' ? 'rotate-180' : ''}`} />
             </button>
           </div>
           {openDropdown === 'type' && (
-            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-zinc-800 rounded-lg shadow-2xl min-w-[180px] z-50 py-2">
+            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-[#1e1e20] rounded-lg shadow-2xl min-w-[180px] z-50 py-2">
               {['All Types', 'Server', 'Workstation', 'Network Device', 'Database'].map(type => (
                 <button 
                   key={type}
@@ -171,17 +171,17 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         {/* Segment Dropdown */}
         <div className="relative dropdown-container">
           <div className="flex flex-col gap-1">
-            <label className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider px-1">Segment</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Segment</label>
             <button 
               onClick={() => setOpenDropdown(openDropdown === 'segment' ? null : 'segment')}
-              className="bg-[#0a0a0b] border border-zinc-800 hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 min-w-[160px]"
+              className="flex items-center gap-2 bg-[#0a0a0b] border border-[#1e1e20] hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all min-w-[160px]"
             >
               <span className="capitalize">{selectedSegment === 'all' ? 'All Segments' : selectedSegment}</span>
               <ChevronDown size={14} className={`ml-auto transition-transform ${openDropdown === 'segment' ? 'rotate-180' : ''}`} />
             </button>
           </div>
           {openDropdown === 'segment' && (
-            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-zinc-800 rounded-lg shadow-2xl min-w-[200px] z-50 py-2">
+            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-[#1e1e20] rounded-lg shadow-2xl min-w-[200px] z-50 py-2">
               {['All Segments', 'Production', 'Engineering', 'DMZ', 'Finance', 'Corporate', 'Guest Network'].map(seg => (
                 <button 
                   key={seg}
@@ -201,17 +201,17 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         {/* Risk Level Dropdown */}
         <div className="relative dropdown-container">
           <div className="flex flex-col gap-1">
-            <label className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider px-1">Risk Level</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Risk Level</label>
             <button 
               onClick={() => setOpenDropdown(openDropdown === 'risk' ? null : 'risk')}
-              className="bg-[#0a0a0b] border border-zinc-800 hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 min-w-[140px]"
+              className="flex items-center gap-2 bg-[#0a0a0b] border border-[#1e1e20] hover:border-zinc-700 text-zinc-300 px-4 py-2 rounded-lg text-xs font-medium transition-all min-w-[140px]"
             >
               <span className="capitalize">{selectedRiskLevel === 'all' ? 'All Risks' : selectedRiskLevel}</span>
               <ChevronDown size={14} className={`ml-auto transition-transform ${openDropdown === 'risk' ? 'rotate-180' : ''}`} />
             </button>
           </div>
           {openDropdown === 'risk' && (
-            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-zinc-800 rounded-lg shadow-2xl min-w-[160px] z-50 py-2">
+            <div className="absolute top-full left-0 mt-2 bg-[#0a0a0b] border border-[#1e1e20] rounded-lg shadow-2xl min-w-[160px] z-50 py-2">
               {['All Risks', 'Critical', 'High', 'Medium', 'Low'].map(risk => (
                 <button 
                   key={risk}
@@ -230,10 +230,10 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-zinc-800">
+      <div className="flex gap-1 border-b border-[#1e1e20]">
         <button
           onClick={() => setActiveTab('active')}
-          className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wide transition-all ${
             activeTab === 'active' 
               ? 'text-[#00D4AA] border-b-2 border-[#00D4AA]' 
               : 'text-zinc-500 hover:text-zinc-300'
@@ -243,7 +243,7 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         </button>
         <button
           onClick={() => setActiveTab('threat')}
-          className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wide transition-all ${
             activeTab === 'threat' 
               ? 'text-[#00D4AA] border-b-2 border-[#00D4AA]' 
               : 'text-zinc-500 hover:text-zinc-300'
@@ -252,37 +252,41 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
           Threat Linked
         </button>
         <div className="ml-auto flex items-center gap-2 px-4">
-          <CheckCircle2 size={12} className="text-emerald-500" />
-          <span className="text-[10px] text-zinc-500 font-medium">Live Asset Polling Active</span>
+          <CheckCircle2 size={12} className="text-green-500" />
+          <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-tight">Live Asset Polling Active</span>
         </div>
       </div>
 
       {/* Asset Table */}
       <div className="bg-[#0a0a0b] border border-zinc-800/50 rounded-lg overflow-hidden">
         <table className="w-full">
-          <thead className="bg-[#0d0d0f] border-b border-zinc-800">
-            <tr className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">
-              <th className="px-6 py-4 text-left">Identity</th>
-              <th className="px-6 py-4 text-left">OS / Environment</th>
-              <th className="px-6 py-4 text-left">Risk Status</th>
-              <th className="px-6 py-4 text-left">Services (Known Services.log)</th>
-              <th className="px-6 py-4 text-left">Log Provenance</th>
-              <th className="px-6 py-4 text-left">Last Activity</th>
+          <thead className="bg-zinc-900/50 border-b border-zinc-800">
+            <tr className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left">Identity</th>
+              <th className="px-4 py-3 text-left">OS / Environment</th>
+              <th className="px-4 py-3 text-left">Risk Status</th>
+              <th className="px-4 py-3 text-left">Services</th>
+              <th className="px-4 py-3 text-left">Log Provenance</th>
+              <th className="px-4 py-3 text-left">Last Activity</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-800/50">
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-20 text-center text-zinc-600 text-xs uppercase tracking-wider animate-pulse">
-                  Synchronizing Inventory...
+                <td colSpan={6} className="px-4 py-20 text-center">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="animate-spin rounded-full border-2 border-zinc-800 border-t-[#00D4AA] w-5 h-5" />
+                    <span className="text-xs text-zinc-500 uppercase tracking-wide">Synchronizing Inventory...</span>
+                  </div>
                 </td>
               </tr>
             ) : filteredAssets.length > 0 ? (
               filteredAssets.slice(0, 10).map((asset, idx) => {
                 const riskScore = asset.riskLevel === 'critical' ? 82 : asset.riskLevel === 'high' ? 51 : asset.riskLevel === 'medium' ? 45 : 12;
-                const riskColor = asset.riskLevel === 'critical' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 
-                                  asset.riskLevel === 'high' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
-                                  'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+                const riskColor = asset.riskLevel === 'critical' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
+                                  asset.riskLevel === 'high' ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' :
+                                  asset.riskLevel === 'medium' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
+                                  'bg-green-500/10 text-green-500 border-green-500/20';
                 
                 return (
                   <tr 
@@ -290,70 +294,70 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
                     className="hover:bg-zinc-900/30 transition-colors group cursor-pointer"
                     onClick={() => onSelectAsset?.(asset.ip)}
                   >
-                    <td className="px-6 py-5">
+                    <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg bg-[#0d0d0f] border ${asset.riskLevel === 'critical' ? 'border-red-500/30' : 'border-zinc-800'}`}>
-                          {asset.type === 'server' ? <Server size={16} className="text-blue-400" /> : <Monitor size={16} className="text-zinc-500" />}
+                        <div className={`p-2 rounded-lg bg-[#161618] border ${asset.riskLevel === 'critical' ? 'border-red-500/20' : 'border-[#1e1e20]'}`}>
+                          {asset.type === 'server' ? <Server size={16} className="text-blue-500" /> : <Monitor size={16} className="text-zinc-400" />}
                         </div>
                         <div>
-                          <div className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                          <div className="text-sm font-semibold text-white group-hover:text-[#00D4AA] transition-colors">
                             {asset.hostname}
                           </div>
-                          <div className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                          <div className="text-xs text-zinc-500 font-medium mt-0.5">
                             {asset.ip}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-4 py-4">
                       <div className="space-y-1.5">
-                        <div className="text-xs font-semibold text-white">{asset.os}</div>
+                        <div className="text-sm font-semibold text-white">{asset.os}</div>
                         <div className="flex gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 bg-zinc-800/50 border border-zinc-700 text-zinc-400 rounded text-[9px] font-medium">
+                          <span className="px-2 py-0.5 bg-zinc-900 border border-[#1e1e20] text-zinc-400 rounded text-[10px] font-bold uppercase">
                             {asset.segment}
                           </span>
                           {idx === 0 && (
-                            <span className="px-2 py-0.5 bg-blue-600/20 border border-blue-600/30 text-blue-400 rounded text-[9px] font-medium">
+                            <span className="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 text-blue-500 rounded text-[10px] font-bold uppercase">
                               Active Directory
                             </span>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
-                      <span className={`inline-flex px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase tracking-wider ${riskColor}`}>
+                    <td className="px-4 py-4">
+                      <div className={`inline-flex px-3 py-1 rounded border text-xs font-bold uppercase ${riskColor}`}>
                         {riskScore}
-                      </span>
+                      </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-4 py-4">
                       <div className="flex gap-1.5 flex-wrap">
                         {asset.services.map(service => (
                           <span 
                             key={service}
-                            className="px-2 py-1 bg-blue-600/20 border border-blue-600/30 text-blue-400 rounded text-[9px] font-bold uppercase"
+                            className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-500 rounded text-[10px] font-bold uppercase"
                           >
                             {service}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-4 py-4">
                       <div className="space-y-1">
                         {asset.logSources.map(log => (
-                          <div key={log} className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                            <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                          <div key={log} className="flex items-center gap-1.5 text-xs text-zinc-500 font-medium">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                             {log}
                           </div>
                         ))}
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-4 py-4">
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-zinc-400 text-[11px]">
+                        <div className="flex items-center gap-2 text-zinc-400 text-xs font-medium">
                           <Clock size={12} />
                           <span>{asset.lastActivity}</span>
                         </div>
-                        <div className="text-[9px] text-zinc-600 font-mono uppercase">
+                        <div className="text-[10px] text-zinc-600 font-medium uppercase tracking-tight">
                           {idx === 0 ? 'INTERNAL-SERVERS-VLAN' : idx === 1 ? 'WIFI USERS' : 'IOT-SENSORS'}
                         </div>
                       </div>
@@ -363,7 +367,7 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
               })
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-16 text-center">
+                <td colSpan={6} className="px-4 py-16 text-center">
                   <div className="flex flex-col items-center justify-center opacity-30">
                     <X size={32} className="text-zinc-600 mb-2" />
                     <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">
@@ -377,12 +381,12 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
         </table>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-zinc-800 bg-[#0d0d0f] flex items-center justify-between">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-800 bg-zinc-900/30">
           <div className="text-xs text-zinc-500">
-            <span className="text-[10px]">Asset classification derived from SSL, HTTP, and DHCP flows.</span>
+            Asset classification derived from SSL, HTTP, and DHCP flows.
           </div>
           <div className="text-xs text-zinc-500">
-            <span className="font-bold text-blue-400">{filteredAssets.length}</span> Assets in View
+            Total: <span className="font-bold text-white">{filteredAssets.length}</span>
           </div>
         </div>
       </div>
@@ -390,136 +394,236 @@ const AssetsPage: React.FC<Props> = ({ onSelectAsset, defaultView = 'inventory' 
   );
 
   const renderStats = () => (
-    <div className="animate-in fade-in duration-500 space-y-8">
-      <div className="flex items-center justify-between mb-8 px-2">
-        <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+    <div className="animate-in fade-in duration-500 space-y-6">
+      {/* Header with View Toggle */}
+      <div className="flex items-center justify-between mb-6 px-2">
+        <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-wide">
           <span>Home</span>
           <ChevronRight size={10} />
-          <span className="text-gray-300">Assets</span>
+          <span>Assets</span>
           <ChevronRight size={10} />
-          <span className="text-[#00D4AA] font-black uppercase">Risk Analytics</span>
+          <span className="text-[#00D4AA]">Risk Analytics</span>
         </div>
-        <div className="flex items-center gap-2 bg-[#161618] border border-[#1e1e20] p-1 rounded-xl">
-          <button onClick={() => setView('inventory')} className={`px-6 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all ${view === 'inventory' ? 'bg-[#00D4AA] text-black' : 'text-gray-500 hover:text-white'}`}>Inventory</button>
-          <button onClick={() => setView('stats')} className={`px-6 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all ${view === 'stats' ? 'bg-[#00D4AA] text-black' : 'text-gray-500 hover:text-white'}`}>Analytics</button>
+        <div className="flex items-center gap-1 bg-[#161618] border border-[#1e1e20] p-1 rounded-lg">
+          <button 
+            onClick={() => setView('inventory')} 
+            className={`px-6 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+              view === 'inventory' ? 'bg-[#00D4AA] text-black' : 'text-zinc-500 hover:text-white'
+            }`}
+          >
+            Inventory
+          </button>
+          <button 
+            onClick={() => setView('stats')} 
+            className={`px-6 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+              view === 'stats' ? 'bg-[#00D4AA] text-black' : 'text-zinc-500 hover:text-white'
+            }`}
+          >
+            Analytics
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: 'TOTAL ASSETS', value: '1,247', trend: '+12', icon: Monitor, color: 'text-[#00D4AA]' },
-          { label: 'HIGH RISK ENTITIES', value: '32', trend: '+3', icon: ShieldAlert, color: 'text-red-500' },
-          { label: 'ACTIVE THREATS', value: '145', trend: '-8', icon: Activity, color: 'text-orange-500' },
-          { label: 'CRITICAL VULNS', value: '28', trend: '+2', icon: AlertTriangle, color: 'text-red-600' },
+          { label: 'TOTAL ASSETS', value: '1,247', trend: '+12', icon: Monitor, trendUp: true },
+          { label: 'HIGH RISK ENTITIES', value: '32', trend: '+3', icon: ShieldAlert, trendUp: true },
+          { label: 'ACTIVE THREATS', value: '145', trend: '-8', icon: Activity, trendUp: false },
+          { label: 'CRITICAL VULNS', value: '28', trend: '+2', icon: AlertTriangle, trendUp: true },
         ].map((stat, i) => (
-          <div key={i} className="bg-[#161618] border border-[#1e1e20] p-6 rounded-lg space-y-4 hover:border-zinc-700 transition-all shadow-xl">
-             <div className="flex justify-between items-start">
-                <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{stat.label}</p>
-                <stat.icon size={16} className="text-zinc-700" />
-             </div>
-             <div className="flex items-end justify-between">
-                <h3 className={`text-xl font-black text-white tracking-tighter`}>{stat.value}</h3>
-                <span className={`text-[10px] font-black ${stat.trend.startsWith('+') ? 'text-red-500' : 'text-emerald-500'}`}>{stat.trend}</span>
-             </div>
+          <div key={i} className="bg-[#161618] border border-[#1e1e20] p-6 rounded-xl shadow-sm space-y-3">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{stat.label}</p>
+              <stat.icon size={16} className="text-zinc-600" />
+            </div>
+            <h3 className="text-xl font-black text-white tracking-tighter">{stat.value}</h3>
+            <p className="text-[10px] font-bold uppercase tracking-tight text-zinc-500">
+              <span className={stat.trendUp ? 'text-red-500' : 'text-green-500'}>{stat.trend}</span> vs last month
+            </p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="bg-[#161618] border border-[#1e1e20] rounded-lg p-8 space-y-8 shadow-xl flex flex-col">
-           <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Risk Level Distribution</h3>
-           <div className="flex-1 min-h-[250px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                 <PieChart>
-                    <Pie data={RISK_DISTRIBUTION} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
-                       {RISK_DISTRIBUTION.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                    </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: '#0c0c0e', border: '1px solid #333', borderRadius: '12px', fontSize: '10px' }} />
-                 </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                 <p className="text-[10px] font-black text-zinc-600 uppercase">Avg Risk</p>
-                 <p className="text-2xl font-black text-white">42%</p>
+      {/* Charts Row 1 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Risk Distribution Pie Chart */}
+        <div className="bg-[#161618] border border-[#1e1e20] rounded-xl p-8 space-y-6 shadow-sm flex flex-col">
+          <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Risk Level Distribution</h3>
+          <div className="flex-1 min-h-[250px] relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={RISK_DISTRIBUTION} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
+                  {RISK_DISTRIBUTION.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#0a0a0b', 
+                    border: '1px solid #1e1e20', 
+                    borderRadius: '8px', 
+                    fontSize: '10px',
+                    color: '#fff'
+                  }} 
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Avg Risk</p>
+              <p className="text-2xl font-black text-white">42%</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {RISK_DISTRIBUTION.map(r => (
+              <div key={r.name} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-tight">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
+                <span className="text-zinc-500">{r.name}</span>
+                <span className="text-white ml-auto">{r.value}%</span>
               </div>
-           </div>
-           <div className="grid grid-cols-2 gap-4">
-              {RISK_DISTRIBUTION.map(r => (
-                 <div key={r.name} className="flex items-center gap-2 text-[10px] font-black uppercase">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
-                    <span className="text-zinc-500">{r.name}</span>
-                    <span className="text-white ml-auto">{r.value}%</span>
-                 </div>
-              ))}
-           </div>
+            ))}
+          </div>
         </div>
 
-        <div className="lg:col-span-2 bg-[#161618] border border-[#1e1e20] rounded-lg p-8 space-y-8 shadow-xl">
-           <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Asset Category Breakdown</h3>
-           <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                 <BarChart data={TYPE_DISTRIBUTION} layout="vertical" margin={{ left: 40, right: 40 }}>
-                    <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 'bold' }} width={100} />
-                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ backgroundColor: '#0c0c0e', border: '1px solid #333', borderRadius: '12px', fontSize: '10px' }} />
-                    <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
-                       {TYPE_DISTRIBUTION.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                    </Bar>
-                 </BarChart>
-              </ResponsiveContainer>
-           </div>
-           <p className="text-[9px] text-zinc-600 uppercase font-bold text-center tracking-widest">Infrastructure classified via OUI, MAC analysis, and port fingerprinting.</p>
+        {/* Asset Category Breakdown */}
+        <div className="lg:col-span-2 bg-[#161618] border border-[#1e1e20] rounded-xl p-8 space-y-6 shadow-sm">
+          <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Asset Category Breakdown</h3>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={TYPE_DISTRIBUTION} layout="vertical" margin={{ left: 40, right: 40 }}>
+                <XAxis type="number" hide />
+                <YAxis 
+                  dataKey="name" 
+                  type="category" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#71717a', fontSize: 10, fontWeight: 'bold' }} 
+                  width={100} 
+                />
+                <Tooltip 
+                  cursor={{ fill: 'transparent' }} 
+                  contentStyle={{ 
+                    backgroundColor: '#0a0a0b', 
+                    border: '1px solid #1e1e20', 
+                    borderRadius: '8px', 
+                    fontSize: '10px',
+                    color: '#fff'
+                  }} 
+                />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
+                  {TYPE_DISTRIBUTION.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-[10px] text-zinc-500 font-bold uppercase text-center tracking-wide">
+            Infrastructure classified via OUI, MAC analysis, and port fingerprinting.
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-[#161618] border border-[#1e1e20] rounded-lg p-8 space-y-8 shadow-xl">
-           <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Discovery Timeline (Discovered vs Inventory Growth)</h3>
-           <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                 <AreaChart data={DISCOVERY_TIMELINE}>
-                    <defs>
-                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#00D4AA" stopOpacity={0.1}/><stop offset="95%" stopColor="#00D4AA" stopOpacity={0}/></linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" vertical={false} />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 9 }} interval={5} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 9 }} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0c0c0e', border: '1px solid #333', borderRadius: '12px', fontSize: '10px' }} />
-                    <Area type="monotone" dataKey="count" stroke="#00D4AA" fill="url(#colorCount)" strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="new" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                 </AreaChart>
-              </ResponsiveContainer>
-           </div>
+      {/* Charts Row 2 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Discovery Timeline */}
+        <div className="bg-[#161618] border border-[#1e1e20] rounded-xl p-8 space-y-6 shadow-sm">
+          <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Discovery Timeline</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={DISCOVERY_TIMELINE}>
+                <defs>
+                  <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00D4AA" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#00D4AA" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e1e20" vertical={false} />
+                <XAxis 
+                  dataKey="date" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#71717a', fontSize: 9 }} 
+                  interval={5} 
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#71717a', fontSize: 9 }} 
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#0a0a0b', 
+                    border: '1px solid #1e1e20', 
+                    borderRadius: '8px', 
+                    fontSize: '10px',
+                    color: '#fff'
+                  }} 
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="count" 
+                  stroke="#00D4AA" 
+                  fill="url(#colorCount)" 
+                  strokeWidth={2} 
+                  dot={false} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="new" 
+                  stroke="#3b82f6" 
+                  strokeWidth={2} 
+                  dot={false} 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="bg-[#161618] border border-[#1e1e20] rounded-lg p-8 space-y-8 shadow-xl">
-           <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Risk Exposure by Network Segment</h3>
-           <div className="space-y-6">
-              {SEGMENT_RISK.map(s => (
-                 <div key={s.name} className="space-y-2 group cursor-pointer">
-                    <div className="flex justify-between items-center text-[10px] font-black uppercase">
-                       <span className="text-zinc-500 group-hover:text-white transition-colors">{s.name} <span className="text-zinc-700 ml-2">({s.assets} Assets)</span></span>
-                       <span className={s.risk > 80 ? 'text-red-500' : 'text-white'}>{s.risk}% Risk</span>
-                    </div>
-                    <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden">
-                       <div className={`h-full transition-all duration-1000 ${s.risk > 80 ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : s.risk > 50 ? 'bg-orange-500' : 'bg-[#00D4AA]'}`} style={{ width: `${s.risk}%` }} />
-                    </div>
-                 </div>
-              ))}
-           </div>
-           <div className="pt-4 border-t border-[#1e1e20]">
-              <p className="text-[8px] text-zinc-700 font-bold uppercase tracking-[0.2em] text-center">Risk calculation integrates vulnerabilities, lateral movement proximity, and asset sensitivity.</p>
-           </div>
+        {/* Risk Exposure by Segment */}
+        <div className="bg-[#161618] border border-[#1e1e20] rounded-xl p-8 space-y-6 shadow-sm">
+          <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Risk Exposure by Network Segment</h3>
+          <div className="space-y-6">
+            {SEGMENT_RISK.map(s => (
+              <div key={s.name} className="space-y-2 group cursor-pointer">
+                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wide">
+                  <span className="text-zinc-500 group-hover:text-white transition-colors">
+                    {s.name} <span className="text-zinc-600">({s.assets} Assets)</span>
+                  </span>
+                  <span className={s.risk > 80 ? 'text-red-500' : s.risk > 50 ? 'text-orange-500' : 'text-white'}>
+                    {s.risk}%
+                  </span>
+                </div>
+                <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-1000 ${
+                      s.risk > 80 
+                        ? 'bg-red-500' 
+                        : s.risk > 50 
+                        ? 'bg-orange-500' 
+                        : 'bg-[#00D4AA]'
+                    }`} 
+                    style={{ width: `${s.risk}%` }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="pt-4 border-t border-[#1e1e20]">
+            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide text-center">
+              Risk calculation integrates vulnerabilities, lateral movement proximity, and asset sensitivity.
+            </p>
+          </div>
         </div>
       </div>
       
-      <div className="flex justify-center pt-8">
-         <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.4em]">Inventory Analytics Sync: {new Date().toLocaleTimeString()}</span>
+      {/* Footer Timestamp */}
+      <div className="flex justify-center pt-6">
+        <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+          Inventory Analytics Sync: {new Date().toLocaleTimeString()}
+        </span>
       </div>
     </div>
   );
 
   return (
-    <div className="max-w-[1300px] mx-auto pb-48 px-6">
+    <div className="max-w-[1300px] mx-auto pb-48 px-4">
       {view === 'inventory' ? renderInventory() : renderStats()}
     </div>
   );

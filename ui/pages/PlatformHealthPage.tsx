@@ -149,7 +149,7 @@ const PlatformHealthPage: React.FC = () => {
                 <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Network Sensors Cluster (Zeek)</h3>
                 <span className="text-[9px] font-bold text-[#10b981] bg-[#10b98110] px-2 py-0.5 rounded border border-[#10b98122]">6 NODES ACTIVE</span>
              </div>
-             <table className="w-full text-left text-[11px] font-mono">
+             <table className="w-full text-left text-[11px] ">
                 <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#0c0c0e]/50 border-b border-[#1e1e20]">
                    <tr>
                       <th className="px-6 py-4 font-black">Component</th>
@@ -256,7 +256,7 @@ const PlatformHealthPage: React.FC = () => {
                     ].map(topic => (
                        <div key={topic.name} className="p-4 bg-[#0c0c0e] border border-[#1e1e20] rounded-xl flex items-center justify-between group hover:border-[#333] transition-all">
                           <div>
-                             <p className="text-[10px] font-mono text-gray-500 uppercase font-bold tracking-widest">{topic.name}</p>
+                             <p className="text-[10px]  text-gray-500 uppercase font-bold tracking-widest">{topic.name}</p>
                              <p className="text-[11px] font-black text-white mt-1">{topic.rate} <span className="text-[9px] text-gray-600">INBOUND</span></p>
                           </div>
                           <div className="text-right">
@@ -298,7 +298,7 @@ const PlatformHealthPage: React.FC = () => {
              <div className="p-6 border-b border-[#1e1e20] bg-[#1c1c1e]/30">
                 <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Processing Engine (Flink Clusters)</h3>
              </div>
-             <table className="w-full text-left text-[11px] font-mono">
+             <table className="w-full text-left text-[11px] ">
                 <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#0c0c0e]/50 border-b border-[#1e1e20]">
                    <tr>
                       <th className="px-6 py-4 font-black">Job Name</th>
@@ -344,7 +344,7 @@ const PlatformHealthPage: React.FC = () => {
                  <div className="p-6 border-b border-[#1e1e20] bg-[#1c1c1e]/30 flex items-center justify-between">
                     <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Detection Performance Breakdown</h3>
                  </div>
-                 <table className="w-full text-left text-[11px] font-mono">
+                 <table className="w-full text-left text-[11px] ">
                     <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#0c0c0e]/50 border-b border-[#1e1e20]">
                        <tr>
                           <th className="px-6 py-4 font-black">Detection Type</th>

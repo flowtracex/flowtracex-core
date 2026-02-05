@@ -56,8 +56,8 @@ const CATEGORIES = [
   { id: 'ALL', label: 'All Categories', color: 'zinc' },
   { id: 'MALWARE', label: 'Malware', color: 'red' },
   { id: 'EXFILTRATION', label: 'Exfiltration', color: 'blue' },
-  { id: 'LATERAL_MOVEMENT', label: 'Lateral Movement', color: 'purple' },
-  { id: 'RECONNAISSANCE', label: 'Reconnaissance', color: 'amber' }
+  { id: 'LATERAL_MOVEMENT', label: 'Lateral Movement', color: 'orange' },
+  { id: 'RECONNAISSANCE', label: 'Reconnaissance', color: 'yellow' }
 ];
 
 interface Props {
@@ -80,35 +80,35 @@ const UseCasesCatalogPage: React.FC<Props> = ({ onSelectUseCase }) => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-[1300px] mx-auto space-y-8 pb-32">
+    <div className="animate-in fade-in duration-500 max-w-[1300px] mx-auto space-y-6 pb-32 px-4">
       
       {/* Header */}
       <div className="space-y-3">
-        <h1 className="text-xl font-black text-white uppercase tracking-tight">Detection Catalog</h1>
-        <p className="text-xs text-zinc-500 font-medium">Review architectural logic and multi-stage behavioral detection modules.</p>
+        <h1 className="text-xl font-bold text-white uppercase tracking-tight">Detection Catalog</h1>
+        <p className="text-sm text-zinc-400">Review architectural logic and multi-stage behavioral detection modules.</p>
       </div>
 
       {/* Search and Filters */}
       <div className="flex items-center gap-4">
         {/* Search Bar */}
-        <div className="flex-1 relative group">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-cyan-400 transition-colors" />
+        <div className="flex-1 relative">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 z-10 pointer-events-none" />
           <input
             type="text"
             placeholder="Search use cases..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-zinc-900/60 border border-zinc-800 rounded-lg pl-12 pr-4 py-3.5 text-xs text-white outline-none focus:border-cyan-600 transition-colors"
+            className="w-full bg-zinc-900/60 backdrop-blur-md border border-white/10 rounded-lg pl-12 pr-6 py-3 text-sm text-zinc-200 outline-none focus:border-[#00D4AA] transition-all placeholder:text-zinc-500"
           />
         </div>
 
         {/* Category Filter */}
         <div className="flex items-center gap-3">
-          <Filter size={14} className="text-zinc-600" />
+          <Filter size={14} className="text-zinc-500" />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-[#0a0a0b] border border-zinc-800 text-[10px] font-black text-zinc-400 uppercase tracking-widest px-6 py-3.5 rounded-lg outline-none cursor-pointer hover:border-zinc-700 transition-colors"
+            className="bg-[#0a0a0b] border border-[#1e1e20] text-xs font-bold text-zinc-400 uppercase tracking-wide px-6 py-3 rounded-lg outline-none cursor-pointer hover:border-zinc-700 transition-all"
           >
             {CATEGORIES.map(cat => (
               <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -118,7 +118,7 @@ const UseCasesCatalogPage: React.FC<Props> = ({ onSelectUseCase }) => {
       </div>
 
       {/* Results Count */}
-      <div className="text-[10px] text-zinc-600 uppercase tracking-widest font-black">
+      <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
         Showing {filteredUseCases.length} use case{filteredUseCases.length !== 1 ? 's' : ''}
       </div>
 
@@ -131,55 +131,57 @@ const UseCasesCatalogPage: React.FC<Props> = ({ onSelectUseCase }) => {
             <div
               key={useCase.id}
               onClick={() => handleUseCaseClick(useCase.id)}
-              className="bg-[#0a0a0b] border border-zinc-800 rounded-xl p-3 hover:border-[#00D4AA] transition-all cursor-pointer group relative overflow-hidden shadow-xl"
+              className="bg-[#161618] border border-[#1e1e20] rounded-xl p-6 hover:border-[#00D4AA] transition-all cursor-pointer group relative overflow-hidden shadow-sm space-y-4"
             >
               {/* Category Badge */}
               <div className="absolute top-4 right-4">
-                <span className={`px-2.5 py-1 rounded text-[8px] font-black uppercase tracking-widest border ${
-                  useCase.category === 'MALWARE' ? 'bg-red-500/10 text-red-400 border-red-500/30' :
-                  useCase.category === 'EXFILTRATION' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
-                  useCase.category === 'LATERAL_MOVEMENT' ? 'bg-purple-500/10 text-purple-400 border-purple-500/30' :
-                  'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                <div className={`inline-flex px-3 py-1 rounded border ${
+                  useCase.category === 'MALWARE' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                  useCase.category === 'EXFILTRATION' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                  useCase.category === 'LATERAL_MOVEMENT' ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' :
+                  'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
                 }`}>
-                  {category?.label.toUpperCase()}
-                </span>
+                  <span className="text-[10px] font-bold uppercase tracking-tight">
+                    {category?.label}
+                  </span>
+                </div>
               </div>
 
               {/* Icon */}
               <div 
-  className="text-[#00D4AA] " 
-  dangerouslySetInnerHTML={{ __html: useCase.icon }}
-/>
+                className="text-[#00D4AA]" 
+                dangerouslySetInnerHTML={{ __html: useCase.icon }}
+              />
 
               {/* Content */}
               <div className="space-y-3">
-                <h3 className="text-base font-black text-white group-hover:text-[#00D4AA] transition-colors tracking-tight">
+                <h3 className="text-sm font-semibold text-white group-hover:text-[#00D4AA] transition-colors">
                   {useCase.name}
                 </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
+                <p className="text-sm text-zinc-400 leading-relaxed line-clamp-2">
                   {useCase.description}
                 </p>
               </div>
 
               {/* Stats */}
-              <div className="flex items-center gap-6 mt-5 pt-5 border-t border-zinc-800">
+              <div className="flex items-center gap-6 pt-4 border-t border-[#1e1e20]">
                 <div className="flex items-center gap-2">
-                  <Layers size={12} className="text-zinc-600" />
-                  <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">
+                  <Layers size={12} className="text-zinc-500" />
+                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-tight">
                     {useCase.stages} Stages
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <AlertTriangle size={12} className="text-zinc-600" />
-                  <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">
+                  <AlertTriangle size={12} className="text-zinc-500" />
+                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-tight">
                     {useCase.signals} Signals
                   </span>
                 </div>
               </div>
 
               {/* Hover Arrow */}
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ChevronRight size={18} className="text-cyan-400" />
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all">
+                <ChevronRight size={18} className="text-[#00D4AA]" />
               </div>
             </div>
           );
@@ -188,12 +190,12 @@ const UseCasesCatalogPage: React.FC<Props> = ({ onSelectUseCase }) => {
 
       {/* Empty State */}
       {filteredUseCases.length === 0 && (
-        <div className="text-center py-24">
-          <Shield size={48} className="text-zinc-800 mx-auto mb-4" />
-          <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">
+        <div className="flex flex-col items-center justify-center py-24 opacity-30">
+          <Shield size={48} className="text-zinc-600 mb-4" />
+          <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-2">
             No use cases found
-          </p>
-          <p className="text-xs text-zinc-700 mt-2">
+          </h3>
+          <p className="text-xs text-zinc-600">
             Try adjusting your filters or search query
           </p>
         </div>

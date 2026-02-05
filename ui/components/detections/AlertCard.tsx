@@ -53,7 +53,7 @@ const AlertCard: React.FC<AlertCardProps> = ({ alert, onViewDetails }) => {
               <h3 className="text-sm font-black text-white uppercase tracking-tight truncate max-w-[400px]">
                 {alert.name}
               </h3>
-              <div className="flex items-center gap-2.5 font-mono text-[11px] font-bold">
+              <div className="flex items-center gap-2.5  text-[11px] font-bold">
                 <span className="text-zinc-400">{alert.sourceIp}</span>
                 {alert.assetContext?.hostname && (
                   <span className="text-blue-400/90 uppercase text-[9px] font-black px-1.5 py-0.5 rounded bg-blue-400/5 border border-blue-400/10">

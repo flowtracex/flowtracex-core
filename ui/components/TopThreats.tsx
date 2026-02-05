@@ -45,7 +45,7 @@ const TopThreats: React.FC<Props> = ({ threats }) => {
                    <p className="text-[9px] text-gray-600 font-bold uppercase tracking-tight truncate">
                      {threat.evidence}
                    </p>
-                   <span className="text-[8px] font-mono text-zinc-700 uppercase">MITRE: {threat.category}</span>
+                   <span className="text-[8px]  text-zinc-700 uppercase">MITRE: {threat.category}</span>
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
