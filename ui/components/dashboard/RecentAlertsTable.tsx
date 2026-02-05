@@ -60,7 +60,7 @@ const RecentAlertsTable: React.FC<Props> = ({ alerts, onAlertClick }) => {
                     <p className="text-xs font-bold text-white group-hover:text-[#00D4AA] transition-colors uppercase tracking-tight">{alert.name}</p>
                     <p className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">{alert.mitreTactic}</p>
                   </td>
-                  <td className="px-6 py-4 text-[11px] font-mono text-zinc-400">
+                  <td className="px-6 py-4 text-[11px]  text-zinc-400">
                     <span className="text-white">{alert.sourceIp}</span>
                     <span className="mx-2 text-zinc-700">→</span>
                     <span>{alert.destinationIp}</span>

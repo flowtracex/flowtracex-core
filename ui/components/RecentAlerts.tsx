@@ -68,11 +68,11 @@ const RecentAlerts: React.FC<Props> = ({ alerts }) => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-[11px] font-mono text-white font-black bg-[#0c0c0e] px-2 py-0.5 rounded border border-[#1e1e20]">
+                    <span className="text-[11px]  text-white font-black bg-[#0c0c0e] px-2 py-0.5 rounded border border-[#1e1e20]">
                       {alert.sourceIp}
                     </span>
                     <ArrowUpRight size={10} className="text-gray-700" />
-                    <span className="text-[11px] font-mono text-zinc-400 font-black">
+                    <span className="text-[11px]  text-zinc-400 font-black">
                       {alert.destinationIp}
                     </span>
                   </div>

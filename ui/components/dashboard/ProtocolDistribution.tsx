@@ -51,7 +51,7 @@ const ProtocolDistribution: React.FC<Props> = ({ protocols, onBarClick }) => {
                   )}
                 </div>
                 <div className="text-right">
-                  <span className="text-white font-mono">{p.percentage}%</span>
+                  <span className="text-white ">{p.percentage}%</span>
                   <p className="text-[8px] text-gray-600 font-black uppercase">{p.volume}</p>
                 </div>
               </div>

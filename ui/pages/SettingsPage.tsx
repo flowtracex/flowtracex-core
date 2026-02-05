@@ -105,7 +105,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
               </div>
               <div className="space-y-1.5">
                 <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest pl-1">Email Address</label>
-                <input type="text" readOnly value="admin@clearflow.security" className="w-full bg-[#161618] border border-[#1e1e20] rounded-xl px-4 py-2.5 text-xs text-gray-500 outline-none cursor-not-allowed font-mono" />
+                <input type="text" readOnly value="admin@clearflow.security" className="w-full bg-[#161618] border border-[#1e1e20] rounded-xl px-4 py-2.5 text-xs text-gray-500 outline-none cursor-not-allowed " />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -210,7 +210,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
 
       <Card title="Active Sessions">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-[11px] font-mono">
+          <table className="w-full text-left text-[11px] ">
             <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#0c0c0e]/50 border-b border-[#1e1e20]">
               <tr>
                 <th className="px-6 py-4">Device</th>
@@ -492,7 +492,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
                <div className="h-full bg-[#00D4AA] shadow-[0_0_10px_rgba(0,212,170,0.4)]" style={{ width: '23%' }} />
             </div>
             <div className="grid grid-cols-2 gap-y-4 pt-2">
-               <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Path</p><p className="text-xs font-bold text-gray-400 font-mono">/data/hot</p></div>
+               <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Path</p><p className="text-xs font-bold text-gray-400 ">/data/hot</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Growth Rate</p><p className="text-xs font-bold text-white">85 GB/day</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Days Until Full</p><p className="text-xs font-bold text-[#10b981]">~90 Days</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Retention</p><p className="text-xs font-bold text-white">45 Days</p></div>
@@ -514,7 +514,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
                <div className="h-full bg-blue-500 opacity-60" style={{ width: '65%' }} />
             </div>
             <div className="grid grid-cols-2 gap-y-4 pt-2">
-               <div><p className="text-[9px] font-black text-gray-400 font-mono">ndr-archive</p></div>
+               <div><p className="text-[9px] font-black text-gray-400 ">ndr-archive</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Compression</p><p className="text-xs font-bold text-[#10b981]">Parquet (8:1)</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Retention</p><p className="text-xs font-bold text-white">365 Days</p></div>
                <div><p className="text-[9px] font-black text-gray-700 uppercase mb-0.5">Retrieval Time</p><p className="text-xs font-bold text-white">2.3s p50</p></div>
@@ -529,7 +529,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
 
       <Card title="Retention Policies by Log Type" headerAction={<button className="text-[10px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline">+ Add Custom Policy</button>}>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-[11px] font-mono">
+          <table className="w-full text-left text-[11px] ">
             <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#0c0c0e]/50 border-b border-[#1e1e20]">
               <tr>
                 <th className="px-6 py-4 font-black">Log Type</th>
@@ -623,7 +623,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
       </div>
 
       <div className="bg-[#161618] border border-[#1e1e20] rounded-lg overflow-hidden shadow-2xl">
-         <table className="w-full text-left text-[11px] font-mono border-collapse">
+         <table className="w-full text-left text-[11px]  border-collapse">
             <thead className="text-[9px] text-gray-600 uppercase tracking-widest bg-[#1c1c1e]/50 border-b border-[#1e1e20]">
                <tr>
                   <th className="px-6 py-4">Timestamp</th>
@@ -734,8 +734,8 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
             <div>
               <h4 className="text-sm font-bold text-white uppercase tracking-tight">ClearFlow X Core</h4>
               <div className="flex gap-4 mt-2">
-                <div><p className="text-[8px] font-black text-gray-700 uppercase">Version</p><p className="text-xs font-mono text-[#00D4AA] font-black">v2.4.1</p></div>
-                <div><p className="text-[8px] font-black text-gray-700 uppercase">Build</p><p className="text-xs font-mono text-gray-400 font-bold">847</p></div>
+                <div><p className="text-[8px] font-black text-gray-700 uppercase">Version</p><p className="text-xs  text-[#00D4AA] font-black">v2.4.1</p></div>
+                <div><p className="text-[8px] font-black text-gray-700 uppercase">Build</p><p className="text-xs  text-gray-400 font-bold">847</p></div>
                 <div><p className="text-[8px] font-black text-gray-700 uppercase">Released</p><p className="text-xs text-gray-400 font-bold">2024-01-10</p></div>
               </div>
             </div>
@@ -756,7 +756,7 @@ const SettingsPage: React.FC<Props> = ({ currentView }) => {
                 ].map(comp => (
                   <div key={comp.name} className="flex justify-between items-center p-3 bg-[#0c0c0e] rounded-xl border border-[#1e1e20]">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">• {comp.name}</span>
-                    <span className="text-[9px] font-mono text-gray-600 font-black">{comp.ver}</span>
+                    <span className="text-[9px]  text-gray-600 font-black">{comp.ver}</span>
                   </div>
                 ))}
               </div>

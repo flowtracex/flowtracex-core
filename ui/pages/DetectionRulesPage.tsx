@@ -204,7 +204,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                           : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
                       }`}
                     >
-                      <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
+                      <div className="text-[11px] font-bold  text-zinc-300 flex items-center justify-between">
                         {item.id}
                         {selectedDefaultField === item.id && <span className="text-blue-400 text-[9px]">→</span>}
                       </div>
@@ -230,7 +230,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                         onClick={() => { selectFieldValue(item.id); setSelectedDefaultField(null); }}
                         className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-blue-700/30 transition-all group"
                       >
-                        <div className="text-[11px] font-bold font-mono text-blue-400">{item.id}</div>
+                        <div className="text-[11px] font-bold  text-blue-400">{item.id}</div>
                         <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
                       </div>
                     ))}
@@ -239,7 +239,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                         onClick={() => { selectFieldValue(selectedDefaultField); setSelectedDefaultField(null); }}
                         className="p-3 rounded-xl hover:bg-blue-600/10 cursor-pointer border border-blue-500/30 hover:border-blue-500/50 transition-all"
                       >
-                        <div className="text-[11px] font-bold font-mono text-zinc-300">Use base field: {selectedDefaultField}</div>
+                        <div className="text-[11px] font-bold  text-zinc-300">Use base field: {selectedDefaultField}</div>
                         <div className="text-[9px] text-zinc-500 mt-1">Select the original field without enrichment</div>
                       </div>
                     </div>
@@ -293,7 +293,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                           : 'hover:bg-zinc-800 border-transparent hover:border-zinc-700'
                       }`}
                     >
-                      <div className="text-[11px] font-bold font-mono text-zinc-300 flex items-center justify-between">
+                      <div className="text-[11px] font-bold  text-zinc-300 flex items-center justify-between">
                         {item.id}
                         {selectedDefaultField === item.id && <span className="text-emerald-400 text-[9px]">→</span>}
                       </div>
@@ -316,9 +316,9 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                         onClick={() => { selectFieldValue(item.id); setSelectedDefaultField(null); }}
                         className="p-3 mb-1 rounded-xl hover:bg-zinc-800 cursor-pointer border border-transparent hover:border-emerald-700/30 transition-all group"
                       >
-                        <div className="text-[11px] font-bold font-mono text-emerald-400">{item.id}</div>
+                        <div className="text-[11px] font-bold  text-emerald-400">{item.id}</div>
                         <div className="text-[9px] text-zinc-500 mt-1">{item.desc}</div>
-                        {item.table && <div className="text-[8px] text-zinc-600 mt-1 font-mono">Table: {item.table}</div>}
+                        {item.table && <div className="text-[8px] text-zinc-600 mt-1 ">Table: {item.table}</div>}
                       </div>
                     ))}
                     <div className="mt-4 pt-4 border-t border-zinc-800">
@@ -326,7 +326,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                         onClick={() => { selectFieldValue(selectedDefaultField); setSelectedDefaultField(null); }}
                         className="p-3 rounded-xl hover:bg-emerald-600/10 cursor-pointer border border-emerald-500/30 hover:border-emerald-500/50 transition-all"
                       >
-                        <div className="text-[11px] font-bold font-mono text-zinc-300">Use value: {selectedDefaultField}</div>
+                        <div className="text-[11px] font-bold  text-zinc-300">Use value: {selectedDefaultField}</div>
                         <div className="text-[9px] text-zinc-500 mt-1">Select this common value directly</div>
                       </div>
                     </div>
@@ -610,7 +610,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                       value={cond.field} 
                       onChange={e => updateCondition(logicGroups[0].id, cond.id, { field: e.target.value })} 
                       placeholder="id.orig_h"
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-mono text-zinc-300 outline-none focus:border-blue-500" 
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs  text-zinc-300 outline-none focus:border-blue-500" 
                     />
                     <button
                       onClick={() => openFieldModal(logicGroups[0].id, cond.id, 'field')}
@@ -714,7 +714,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                         type="text"
                         value={thresholdField}
                         onChange={e => setThresholdField(e.target.value)}
-                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-blue-400 outline-none"
+                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px]  text-blue-400 outline-none"
                       />
                       <button
                         onClick={() => {
@@ -732,7 +732,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                       <input
                         type="text"
                         defaultValue="destination.ip"
-                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px] font-mono text-purple-400 outline-none"
+                        className="bg-zinc-950 border border-zinc-800 w-24 pl-2 pr-7 py-1.5 rounded-md text-[10px]  text-purple-400 outline-none"
                       />
                       <button
                         onClick={() => {
@@ -828,7 +828,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                           value={cond.field} 
                           onChange={e => updateCondition(logicGroups[1].id, cond.id, { field: e.target.value })} 
                           placeholder="id.orig_h"
-                          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs font-mono text-zinc-300 outline-none focus:border-red-500" 
+                          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-3 pr-10 py-3 text-xs  text-zinc-300 outline-none focus:border-red-500" 
                         />
                         <button
                           onClick={() => openFieldModal(logicGroups[1].id, cond.id, 'field')}
@@ -971,7 +971,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                 type="text" 
                 placeholder="Select key..."
                 readOnly
-                className="bg-zinc-950 border border-zinc-800 w-full pl-3 pr-9 py-2 rounded-lg text-xs font-mono text-zinc-500 outline-none cursor-pointer" 
+                className="bg-zinc-950 border border-zinc-800 w-full pl-3 pr-9 py-2 rounded-lg text-xs  text-zinc-500 outline-none cursor-pointer" 
               />
               <button
                 onClick={() => {
@@ -985,11 +985,11 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
               </button>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
+              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px]  border border-zinc-800 flex items-center gap-1.5">
                 <span className="text-blue-400 font-bold">source.ip</span>
                 <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
               </div>
-              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px] font-mono border border-zinc-800 flex items-center gap-1.5">
+              <div className="px-2 py-1 bg-zinc-950 rounded text-[10px]  border border-zinc-800 flex items-center gap-1.5">
                 <span className="text-blue-400 font-bold">rule_id</span>
                 <button className="text-zinc-600 hover:text-red-500 text-xs">✕</button>
               </div>
@@ -1043,7 +1043,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
               <div className="p-2 bg-blue-500/10 rounded-lg">
                 <FileText size={18} className="text-blue-400" />
               </div>
-              <h3 className="text-sm font-black text-white uppercase tracking-wide">Rule Identity</h3>
+              <h3 className="text-sm font-black text-white uppercase tracking-wide">Rule Identity </h3>
             </div>
 
             <div className="grid grid-cols-3 gap-6">
@@ -1114,11 +1114,11 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                 <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
-                    <span className="text-xs font-mono text-blue-400">{logicGroups[0]?.source}</span>
+                    <span className="text-xs  text-blue-400">{logicGroups[0]?.source}</span>
                   </div>
                   
                   {logicGroups[0]?.conditions.map((cond, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs font-mono">
+                    <div key={idx} className="flex items-center gap-2 text-xs ">
                       <span className="text-emerald-400">{cond.field}</span>
                       <span className="text-zinc-600">{cond.operator}</span>
                       <span className="text-pink-400">{cond.value}</span>
@@ -1155,11 +1155,11 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                     <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Source</span>
-                        <span className="text-xs font-mono text-red-400">{logicGroups[1]?.source}</span>
+                        <span className="text-xs  text-red-400">{logicGroups[1]?.source}</span>
                       </div>
                       
                       {logicGroups[1]?.conditions.map((cond, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-xs font-mono">
+                        <div key={idx} className="flex items-center gap-2 text-xs ">
                           <span className="text-emerald-400">{cond.field}</span>
                           <span className="text-zinc-600">{cond.operator}</span>
                           <span className="text-pink-400">{cond.value}</span>
@@ -1218,9 +1218,9 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
               <div>
                 <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2">Deduplication</p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px] font-mono text-blue-400 font-bold">source.ip</span>
+                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px]  text-blue-400 font-bold">source.ip</span>
                   <span className="text-[10px] text-zinc-700 font-bold self-center">+</span>
-                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px] font-mono text-blue-400 font-bold">rule.id</span>
+                  <span className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded text-[11px]  text-blue-400 font-bold">rule.id</span>
                 </div>
               </div>
               <div>
@@ -1298,7 +1298,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
          <div className="flex items-center gap-8">
             <div className="text-right">
                <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Version</p>
-               <p className="text-[11px] font-mono font-bold text-zinc-500">v4.2.0-PRD</p>
+               <p className="text-[11px]  font-bold text-zinc-500">v4.2.0-PRD</p>
             </div>
             <button onClick={() => setActiveTab('library')} className="p-2 text-zinc-700 hover:text-white"><X size={24}/></button>
          </div>
@@ -1354,7 +1354,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
               <thead className="bg-zinc-950/50 border-b border-zinc-800 text-[10px] font-black text-zinc-600 uppercase tracking-widest">
                  <tr>
                     <th className="px-6 py-4 w-12 text-center">State</th>
-                    <th className="px-6 py-4">Rule Identity</th>
+                    <th className="px-6 py-4">Rule Identity</th> 
                     <th className="px-6 py-4">MITRE Mapping</th>
                     <th className="px-6 py-4 text-center">Detections (24h)</th>
                     <th className="px-6 py-4 text-center">FP Rate</th>
@@ -1375,7 +1375,7 @@ const DetectionRulesPage: React.FC<{ defaultView?: TabId }> = ({ defaultView = '
                             <div>
                                <p className="text-sm font-black text-white group-hover:text-[#00D4AA] transition-colors">{rule.name}</p>
                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="text-[9px] font-mono text-zinc-600 font-bold">{rule.id}</span>
+                                  <span className="text-[9px]  text-zinc-600 font-bold">{rule.id}</span>
                                   <span className="text-[8px] font-black uppercase tracking-tighter text-zinc-500 bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800">[{rule.source}]</span>
                                </div>
                             </div>

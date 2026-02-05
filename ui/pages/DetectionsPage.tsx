@@ -436,7 +436,7 @@ const DetectionsPage: React.FC<{ defaultView?: 'feed' | 'stats' }> = ({ defaultV
                 <td className="px-4 py-4">
                   <div className="space-y-1">
                     <div className="text-sm font-semibold text-white">{alert.name}</div>
-                    <div className="text-[10px] text-zinc-500 font-mono whitespace-nowrap">
+                    <div className="text-[10px] text-zinc-500  whitespace-nowrap">
                       {alert.mitreId || 'T1071.001'} · {alert.mitreStage || 'C&C'} · 2024-{alert.timestamp?.split('-')[1] || '06'}-{alert.timestamp?.split('-')[2]?.split(' ')[0] || '15'}
                     </div>
                   </div>
@@ -444,9 +444,9 @@ const DetectionsPage: React.FC<{ defaultView?: 'feed' | 'stats' }> = ({ defaultV
                 <td className="px-4 py-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-white">{alert.sourceIp}</span>
+                      <span className="text-xs  text-white">{alert.sourceIp}</span>
                       <ChevronRight size={12} className="text-zinc-600 flex-shrink-0" />
-                      <span className="text-xs font-mono text-white">{alert.destIp || '45.12.88.2'}</span>
+                      <span className="text-xs  text-white">{alert.destIp || '45.12.88.2'}</span>
                     </div>
                     <div className="text-[10px] text-zinc-500 font-medium truncate">
                       {alert.assetContext?.segment || 'MGMT-CHQ-K02'} ({alert.protocol || 'ZEEK DHCP'})
@@ -479,7 +479,7 @@ const DetectionsPage: React.FC<{ defaultView?: 'feed' | 'stats' }> = ({ defaultV
                       <Clock size={12} className="flex-shrink-0" />
                       <span>2 mins ago</span>
                     </div>
-                    <div className="text-[10px] text-zinc-600 font-mono whitespace-nowrap">
+                    <div className="text-[10px] text-zinc-600  whitespace-nowrap">
                       JAN 22, 16:22
                     </div>
                   </div>
@@ -720,7 +720,7 @@ const DetectionsPage: React.FC<{ defaultView?: 'feed' | 'stats' }> = ({ defaultV
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-zinc-900/30 transition-colors cursor-pointer">
                   <td className="px-8 py-5">
-                    <span className="text-xs font-mono font-semibold text-white">{row.host}</span>
+                    <span className="text-xs  font-semibold text-white">{row.host}</span>
                     <span className="text-[10px] text-zinc-600 font-bold ml-2">{row.tag}</span>
                   </td>
                   <td className="px-8 py-5 text-sm text-zinc-400">{row.alert}</td>

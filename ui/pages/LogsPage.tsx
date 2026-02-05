@@ -157,9 +157,9 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
     <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl space-y-4 hover:border-zinc-700 transition-all group shadow-sm">
       <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{label}</p>
       <div className="flex items-end justify-between">
-        <h3 className={`text-xl font-black text-white tracking-tighter ${color}`}>{value}</h3>
+        <h3 className={`text-xl font-black text-white tracking-tighter `}>{value}</h3> 
         {trend && (
-          <div className={`flex items-center gap-1 text-[11px] font-black ${trendGood ? 'text-emerald-500' : 'text-red-500'}`}>
+          <div className={`flex items-center gap-1 text-[11px] font-black `}>
             {trend.startsWith('↑') ? <TrendingUp size={14}/> : <TrendingDown size={14}/>} {trend}
           </div>
         )}
@@ -344,7 +344,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                 onClick={() => setSelectedLog(log)}
                 className="hover:bg-zinc-800/50 transition-colors cursor-pointer group"
               >
-                <td className="px-6 py-4 text-[11px] font-mono text-zinc-500">{log.timestamp.split(' ')[1]}</td>
+                <td className="px-6 py-4 text-[11px]  text-zinc-500">{log.timestamp.split(' ')[1]}</td>
                 <td className="px-6 py-4 text-center">
                   <div className={`w-2.5 h-2.5 rounded-full mx-auto ${
                     log.severity === 'critical' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 
@@ -354,13 +354,13 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                 </td>
                 <td className="px-6 py-4">
                   <div className="space-y-0.5">
-                    <p className="text-[11px] font-mono font-bold text-white group-hover:text-[#00D4AA] transition-colors">{log.sourceIP}</p>
+                    <p className="text-[11px]  font-bold text-white group-hover:text-[#00D4AA] transition-colors">{log.sourceIP}</p>
                     {log.sourceAsset && <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter">{log.sourceAsset.hostname}</p>}
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="space-y-0.5">
-                    <p className="text-[11px] font-mono font-bold text-zinc-400">{log.destIP}</p>
+                    <p className="text-[11px]  font-bold text-zinc-400">{log.destIP}</p>
                     {log.destInfo && <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter flex items-center gap-1.5">{log.destInfo.flag} {log.destInfo.hostname} {log.destInfo.malicious && <AlertTriangle size={10} className="text-red-500"/>}</p>}
                   </div>
                 </td>
@@ -443,7 +443,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
              </div>
              <div className="space-y-3 pt-4 border-t border-zinc-800">
                 <div className="flex justify-between items-center"><span className="text-[9px] font-bold text-zinc-600 uppercase">Storage Growth Rate</span><span className="text-xs font-black text-white">85GB/Day</span></div>
-                <div className="flex justify-between items-center"><span className="text-[9px] font-bold text-zinc-600 uppercase">Days Until Full</span><span className="text-xs font-black text-orange-500">45 Days ⚠️</span></div>
+                <div className="flex justify-between items-center"><span className="text-[9px] font-bold text-zinc-600 uppercase">Days Until Full</span><span className="text-xs font-black">45 Days ⚠️</span></div>
              </div>
           </div>
 
@@ -502,7 +502,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                         <span className="text-zinc-700">{s.value}%</span>
                      </div>
                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono text-zinc-500">{s.count}</span>
+                        <span className="text-[10px]  text-zinc-500">{s.count}</span>
                         <button className="text-[8px] font-black text-zinc-600 hover:text-[#00D4AA] uppercase opacity-0 group-hover:opacity-100 transition-all">View Logs</button>
                      </div>
                   </div>
@@ -522,7 +522,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                    <div key={gen.ip} className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 space-y-4 hover:border-zinc-700 transition-all group">
                       <div className="flex justify-between items-start">
                          <div>
-                            <p className="text-sm font-black text-white font-mono">{gen.ip}</p>
+                            <p className="text-sm font-black text-white ">{gen.ip}</p>
                             <p className="text-[9px] text-zinc-600 font-bold uppercase mt-0.5">{gen.hostname} • {gen.type}</p>
                          </div>
                          <div className="flex flex-col items-end gap-2">
@@ -539,7 +539,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                            <div className={`h-full ${gen.anomaly ? 'bg-red-500' : 'bg-blue-500'}`} style={{ width: `${gen.pct * 15}%` }} />
                         </div>
                       </div>
-                      {gen.anomaly && <p className="text-[9px] text-red-400 font-bold uppercase tracking-tighter flex items-center gap-2"><Zap size={10}/> {gen.reason} - Spike +340%</p>}
+                      {gen.anomaly && <p className="text-[9px]  font-bold uppercase tracking-tighter flex items-center gap-2"><Zap size={10}/> {gen.reason} - Spike +340%</p>}
                    </div>
                 ))}
              </div>
@@ -553,7 +553,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 space-y-6 shadow-xl">
              <div className="flex justify-between items-center">
                 <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-500" /> Data Quality</h3>
-                <span className="text-xl font-black text-emerald-500 tracking-tighter">97.8%</span>
+                <span className="text-xl font-black  tracking-tighter">97.8%</span>
              </div>
              <div className="space-y-4">
                 {[
@@ -623,34 +623,34 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
            <div className="space-y-4">
-              <p className="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-2"><ShieldAlert size={12}/> Critical Anomalies</p>
+              <p className="text-[10px] font-black  uppercase tracking-widest flex items-center gap-2"><ShieldAlert size={12}/> Critical Anomalies</p>
               <div className="space-y-4">
                  <p className="text-xs text-zinc-400 leading-relaxed"><span className="text-white font-bold uppercase tracking-tight">C2 Traffic detected:</span> Asset 10.0.5.42 log volume increased 340% following unusual DNS entropy peaks.</p>
                  <div className="flex gap-2">
-                    <button className="text-[9px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline">Investigate</button>
+                    <button className="text-[9px] font-black  uppercase tracking-widest hover:underline">Investigate</button>
                     <button className="text-[9px] font-black text-zinc-500 uppercase tracking-widest hover:underline">Dismiss</button>
                  </div>
               </div>
            </div>
            <div className="space-y-4">
-              <p className="text-[10px] font-black text-orange-500 uppercase tracking-widest flex items-center gap-2"><AlertTriangle size={12}/> Pipeline Alerts</p>
+              <p className="text-[10px] font-black  uppercase tracking-widest flex items-center gap-2"><AlertTriangle size={12}/> Pipeline Alerts</p>
               <div className="space-y-4">
                  <p className="text-xs text-zinc-400 leading-relaxed"><span className="text-white font-bold uppercase tracking-tight">Exhaustion Risk:</span> Total telemetry storage will be at capacity in ~45 days based on current growth rate.</p>
-                 <button className="text-[9px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline">Adjust Retention</button>
+                 <button className="text-[9px] font-black  uppercase tracking-widest hover:underline">Adjust Retention</button>
               </div>
            </div>
            <div className="space-y-4">
-              <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2"><CheckCircle2 size={12}/> Performance Hits</p>
+              <p className="text-[10px] font-black  uppercase tracking-widest flex items-center gap-2"><CheckCircle2 size={12}/> Performance Hits</p>
               <div className="space-y-4">
                  <p className="text-xs text-zinc-400 leading-relaxed"><span className="text-white font-bold uppercase tracking-tight">Latency Optimized:</span> End-to-end pipeline latency improved by 10% following recent cluster reconfiguration.</p>
-                 <button className="text-[9px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline">View Benchmark</button>
+                 <button className="text-[9px] font-black  uppercase tracking-widest hover:underline">View Benchmark</button>
               </div>
            </div>
            <div className="space-y-4">
               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2"><Layers size={12}/> Optimization</p>
               <div className="space-y-4">
                  <p className="text-xs text-zinc-400 leading-relaxed"><span className="text-white font-bold uppercase tracking-tight">Rule Tuning:</span> "DNS-TUNNEL-001" is causing 40% of detection latency. Consider regex optimization.</p>
-                 <button className="text-[9px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline">Open Rules</button>
+                 <button className="text-[9px] font-black  uppercase tracking-widest hover:underline">Open Rules</button>
               </div>
            </div>
         </div>
@@ -677,7 +677,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
              <button className="bg-zinc-950 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:text-white transition-all">Export View</button>
           </div>
         </div>
-        <div className="flex-1 bg-[#0c0c0e] font-mono text-[11px] p-6 overflow-y-auto space-y-2 no-scrollbar">
+        <div className="flex-1 bg-[#0c0c0e]  text-[11px] p-6 overflow-y-auto space-y-2 no-scrollbar">
            {MOCK_LOGS.map((log, i) => (
              <div key={i} className="flex items-center gap-6 py-1 group cursor-pointer hover:bg-white/5 transition-all">
                 <span className="text-zinc-700 w-24">{log.timestamp.split(' ')[1]}</span>
@@ -715,7 +715,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
           <div className="sticky top-0 bg-zinc-950/95 backdrop-blur-sm border-b border-zinc-800 p-6 flex items-center justify-between z-10">
             <div>
               <h3 className="text-lg font-black text-white uppercase tracking-tight">Log Details</h3>
-              <p className="text-[10px] text-zinc-500 font-mono mt-1">{selectedLog.id}</p>
+              <p className="text-[10px] text-zinc-500  mt-1">{selectedLog.id}</p>
             </div>
             <button 
               onClick={() => setSelectedLog(null)}
@@ -734,11 +734,11 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
               <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-3">
   <div className="flex items-center justify-between">
     <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Timestamp (UTC)</p>
-    <p className="text-sm font-mono text-white">{selectedLog.timestamp}</p>
+    <p className="text-sm  text-white">{selectedLog.timestamp}</p>
   </div>
   <div className="flex items-center justify-between">
     <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Internal Log ID</p>
-    <p className="text-sm font-mono text-zinc-400">{selectedLog.id}</p>
+    <p className="text-sm  text-zinc-400">{selectedLog.id}</p>
   </div>
   <div className="flex items-center justify-between">
     <p className="text-[10px] font-black text-zinc-600 uppercase tracking-wider">Global Severity</p>
@@ -784,7 +784,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                   {selectedLog.message}
                 </p>
                 {selectedLog.type === 'dns' && (
-                  <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-800 font-mono text-[10px] text-zinc-500 break-all leading-relaxed">
+                  <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-800  text-[10px] text-zinc-500 break-all leading-relaxed">
                     Query: abc123xyz789.evil-domain.com<br/>
                     Response: TXT record with encrypted payload (base64)
                   </div>
@@ -841,7 +841,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                 {[1, 2, 3].map(i => (
                   <div key={i} className="text-[10px] text-zinc-500 hover:text-white cursor-pointer transition-colors flex justify-between uppercase tracking-tighter">
                     <span>DNS query to evil.domain</span>
-                    <span className="font-mono text-[9px] text-zinc-700">15:{42 - i}:18</span>
+                    <span className=" text-[9px] text-zinc-700">15:{42 - i}:18</span>
                   </div>
                 ))}
                 <button className="text-[9px] font-black text-[#00D4AA] uppercase tracking-widest hover:underline mt-2">
@@ -910,7 +910,7 @@ const LogsPage: React.FC<{ defaultView?: 'search' | 'stats' | 'live' }> = ({ def
                              <select className="w-24 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-zinc-500 outline-none focus:border-[#00D4AA] appearance-none font-black text-center">
                                 <option>{cond.op}</option>
                              </select>
-                             <input type="text" defaultValue={cond.val} className="flex-[2] bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white outline-none font-mono focus:border-[#00D4AA]" />
+                             <input type="text" defaultValue={cond.val} className="flex-[2] bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white outline-none  focus:border-[#00D4AA]" />
                              <button className="p-3 text-zinc-800 hover:text-red-500 transition-colors"><Trash2 size={16}/></button>
                           </div>
                        ))}

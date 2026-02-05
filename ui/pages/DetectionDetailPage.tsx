@@ -230,7 +230,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                   <div className="flex-1 pb-6 max-w-2xl">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm font-bold text-white uppercase">Initial Activity</span>
-                      <span className="text-xs text-zinc-500 font-mono">13:40</span>
+                      <span className="text-xs text-zinc-500 ">13:40</span>
                     </div>
                     
                     <div className="rounded-lg p-1">
@@ -257,7 +257,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                   <div className="flex-1 pb-6 max-w-2xl">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm font-bold text-white uppercase">Suspicious Behavior</span>
-                      <span className="text-xs text-zinc-500 font-mono">13:45</span>
+                      <span className="text-xs text-zinc-500 ">13:45</span>
                     </div>
                     
                     <div className="rounded-lg p-1">
@@ -284,7 +284,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                   <div className="flex-1 pb-6 max-w-2xl">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm font-bold text-white uppercase">Escalation</span>
-                      <span className="text-xs text-zinc-500 font-mono">13:48</span>
+                      <span className="text-xs text-zinc-500 ">13:48</span>
                     </div>
                     
                     <div className="rounded-lg p-1">
@@ -310,7 +310,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                   <div className="flex-1 max-w-2xl">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm font-bold text-white uppercase">Alert Generated</span>
-                      <span className="text-xs text-zinc-500 font-mono">13:51</span>
+                      <span className="text-xs text-zinc-500 ">13:51</span>
                     </div>
                     
                     <div className="rounded-lg p-1">
@@ -440,16 +440,16 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                         ].map((row, i) => (
                           <tr key={i} className="hover:bg-zinc-900/30 transition-colors cursor-pointer">
                             <td className="px-4 py-4">
-                              <span className="text-xs font-mono text-zinc-400">{row.ts}</span>
+                              <span className="text-xs  text-zinc-400">{row.ts}</span>
                             </td>
                             <td className="px-4 py-4">
-                              <span className="text-xs font-mono text-[#00D4AA]">{row.proto}</span>
+                              <span className="text-xs  text-[#00D4AA]">{row.proto}</span>
                             </td>
                             <td className="px-4 py-4">
                               <span className="text-sm font-semibold text-white">{row.bytes}</span>
                             </td>
                             <td className="px-4 py-4">
-                              <span className="text-xs font-mono text-zinc-400">{row.dest}</span>
+                              <span className="text-xs  text-zinc-400">{row.dest}</span>
                             </td>
                           </tr>
                         ))}
@@ -481,7 +481,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                   <Server size={16} className="text-[#00D4AA]" />
                   <div className="flex-1">
                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Source System: WS-FINAN...</div>
-                    <div className="text-xs font-mono text-white mt-1">192.168.1.45</div>
+                    <div className="text-xs  text-white mt-1">192.168.1.45</div>
                   </div>
                   <ChevronRight size={16} className="text-zinc-500" />
                 </div>
@@ -737,7 +737,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                             <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">
                               Time Window
                             </div>
-                            <div className="text-xs font-mono text-white">13:40 - 13:58</div>
+                            <div className="text-xs  text-white">13:40 - 13:58</div>
                           </div>
 
                           <div className="space-y-2">
@@ -750,7 +750,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                               <div className="flex items-center gap-3">
                                 <FileText size={16} className="text-[#00D4AA]" />
                                 <div className="flex-1">
-                                  <div className="text-xs font-mono text-white">HTTP_105 - UID: C934228</div>
+                                  <div className="text-xs  text-white">HTTP_105 - UID: C934228</div>
                                 </div>
                                 <ChevronRight size={16} className="text-zinc-500" />
                               </div>
@@ -763,7 +763,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                               <div className="flex items-center gap-3">
                                 <FileText size={16} className="text-[#00D4AA]" />
                                 <div className="flex-1">
-                                  <div className="text-xs font-mono text-white">HTTP_105 - UID: C8442594</div>
+                                  <div className="text-xs  text-white">HTTP_105 - UID: C8442594</div>
                                 </div>
                                 <ChevronRight size={16} className="text-zinc-500" />
                               </div>
@@ -785,7 +785,7 @@ const DetectionDetailPage: React.FC<Props> = ({ id, onBack }) => {
                         </div>
                         <div>
                           <div className="text-xl font-bold text-white uppercase tracking-tight">WS-FINAN-01</div>
-                          <div className="text-xs font-mono text-[#00D4AA] mt-1">192.168.1.45</div>
+                          <div className="text-xs  text-[#00D4AA] mt-1">192.168.1.45</div>
                         </div>
                       </div>
                       
